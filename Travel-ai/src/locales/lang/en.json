@@ -1,0 +1,15 @@
+{
+    "language": "English",
+    "welcome": "Welcome to Travel-ai",
+    "theme": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    },
+    "home": {
+        "welcome-title": {
+            "small": "Welcome to",
+            "big": "the Travel-AI project"
+        }
+    }
+}

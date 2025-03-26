@@ -1,0 +1,15 @@
+{
+    "language": "Tiếng Việt",
+    "welcome": "Chào mừng bạn đến với Travel AI",
+    "theme": {
+        "light": "Sáng",
+        "dark": "Tối",
+        "system": "Hệ Thống"
+    },
+    "home": {
+        "welcome-title": {
+            "small": "Chào mừng đến với",
+            "big": "dự án du lịch tích hợp AI"
+        }
+    }
+}
