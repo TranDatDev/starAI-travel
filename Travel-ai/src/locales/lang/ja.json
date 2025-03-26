@@ -1,0 +1,15 @@
+{
+    "language": "日本語",
+    "welcome": "Travel-AIへようこそ",
+    "theme": {
+        "light": "ライト",
+        "dark": "ダーク",
+        "system": "システム"
+    },
+    "home": {
+        "welcome-title": {
+            "small": "ようこそ",
+            "big": "Travel-AIプロジェクトへ"
+        }
+    }
+}
