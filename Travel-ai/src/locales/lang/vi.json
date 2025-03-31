@@ -1,6 +1,7 @@
 {
     "language": "Tiếng Việt",
-    "welcome": "Chào mừng bạn đến với Travel AI",
+    "change-language-noti": "Ngôn ngữ của bạn đã được chuyển sang Tiếng Việt",
+    "welcome": "Chào mừng bạn đến với Star AI, một dự án du lịch tích hợp AI",
     "theme": {
         "light": "Sáng",
         "dark": "Tối",
@@ -11,5 +12,22 @@
             "small": "Chào mừng đến với",
             "big": "dự án du lịch tích hợp AI"
         }
+    },
+    "link": {
+        "home": "Trang chủ",
+        "login": "Đăng nhập",
+        "register": "Đăng ký",
+        "accommodation": "Cơ sở lưu trú",
+        "attraction": "Địa điểm du lịch",
+        "restaurant": "Nhà hàng"
+    },
+    "pagination": {
+        "previous": "Trước",
+        "next": "Sau"
+    },
+    "accommodation": {
+        "title": "Cơ sở lưu trú",
+        "no-results": "Không tìm thấy cơ sở lưu trú.",
+        "has-results": "Đã tìm thấy {{count}} cơ sở lưu trú."
     }
 }

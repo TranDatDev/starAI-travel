@@ -1,0 +1,33 @@
+{
+    "language": "한국어",
+    "change-language-noti": "언어가 한국어로 변경되었습니다",
+    "welcome": "Star AI에 오신 것을 환영합니다. AI가 통합된 여행 프로젝트입니다",
+    "theme": {
+        "light": "라이트",
+        "dark": "다크",
+        "system": "시스템"
+    },
+    "home": {
+        "welcome-title": {
+            "small": "환영합니다",
+            "big": "AI 여행 프로젝트에"
+        }
+    },
+    "link": {
+        "home": "홈",
+        "login": "로그인",
+        "register": "회원가입",
+        "accommodation": "숙박 시설",
+        "attraction": "관광지",
+        "restaurant": "레스토랑"
+    },
+    "pagination": {
+        "previous": "이전",
+        "next": "다음"
+    },
+    "accommodation": {
+        "title": "숙박 시설",
+        "no-results": "숙박 시설을 찾을 수 없습니다.",
+        "has-results": "{{count}}개의 숙박 시설을 찾았습니다."
+    }
+}

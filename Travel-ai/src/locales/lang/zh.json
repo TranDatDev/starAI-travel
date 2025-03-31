@@ -1,0 +1,33 @@
+{
+    "language": "中文",
+    "change-language-noti": "您的语言已更改为中文",
+    "welcome": "欢迎来到 Star AI，一个集成 AI 的旅行项目",
+    "theme": {
+        "light": "浅色",
+        "dark": "深色",
+        "system": "系统"
+    },
+    "home": {
+        "welcome-title": {
+            "small": "欢迎来到",
+            "big": "一个 AI 旅行项目"
+        }
+    },
+    "link": {
+        "home": "首页",
+        "login": "登录",
+        "register": "注册",
+        "accommodation": "住宿",
+        "attraction": "景点",
+        "restaurant": "餐厅"
+    },
+    "pagination": {
+        "previous": "上一页",
+        "next": "下一页"
+    },
+    "accommodation": {
+        "title": "住宿",
+        "no-results": "未找到住宿。",
+        "has-results": "找到 {{count}} 个住宿。"
+    }
+}

@@ -5,6 +5,8 @@ export const languages = [
     { code: 'en', label: 'English' },
     { code: 'vi', label: 'Tiếng Việt' },
     { code: 'ja', label: '日本語' },
+    { code: 'ko', label: '한국어' },
+    { code: 'zh', label: '中文' },
 ];
 
 async function loadResources() {

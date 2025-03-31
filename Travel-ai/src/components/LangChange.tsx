@@ -9,20 +9,26 @@ import {
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { languages } from '@/locales/i18n';
+import { toast } from 'sonner';
+
 type Props = {};
 
 export default function LangChange({}: Props) {
-    const { i18n } = useTranslation();
-    const defaultLanguage = i18n.language;
+    const { t, i18n } = useTranslation();
+    const currentLanguage = i18n.language;
     const changeLanguage = (lng: string) => {
+        if (lng === currentLanguage) {
+            return;
+        }
         i18n.changeLanguage(lng);
+        toast(t('change-language-noti'));
     };
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline">
                     <Icon icon="ion:language" className="mr-2" />
-                    {languages.find((lang) => lang.code === defaultLanguage)?.label || 'Language'}
+                    {languages.find((lang) => lang.code === currentLanguage)?.label || 'Language'}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top">

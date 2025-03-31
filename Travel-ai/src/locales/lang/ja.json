@@ -1,6 +1,7 @@
 {
     "language": "日本語",
-    "welcome": "Travel-AIへようこそ",
+    "change-language-noti": "言語が日本語に変更されました",
+    "welcome": "Star AIへようこそ。AIを統合した旅行プロジェクトです",
     "theme": {
         "light": "ライト",
         "dark": "ダーク",
@@ -9,7 +10,24 @@
     "home": {
         "welcome-title": {
             "small": "ようこそ",
-            "big": "Travel-AIプロジェクトへ"
+            "big": "AI旅行プロジェクトへ"
         }
+    },
+    "link": {
+        "home": "ホーム",
+        "login": "ログイン",
+        "register": "登録",
+        "accommodation": "宿泊施設",
+        "attraction": "観光名所",
+        "restaurant": "レストラン"
+    },
+    "pagination": {
+        "previous": "前へ",
+        "next": "次へ"
+    },
+    "accommodation": {
+        "title": "宿泊施設",
+        "no-results": "宿泊施設が見つかりませんでした。",
+        "has-results": "{{count}} 件の宿泊施設が見つかりました。"
     }
 }

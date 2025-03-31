@@ -1,6 +1,7 @@
 {
     "language": "English",
-    "welcome": "Welcome to Travel-ai",
+    "change-language-noti": "Your language has been changed to English",
+    "welcome": "Welcome to Star AI, a travel project integrated with AI",
     "theme": {
         "light": "Light",
         "dark": "Dark",
@@ -9,7 +10,24 @@
     "home": {
         "welcome-title": {
             "small": "Welcome to",
-            "big": "the Travel-AI project"
+            "big": "a Travel-AI project"
         }
+    },
+    "link": {
+        "home": "Home",
+        "login": "Login",
+        "register": "Register",
+        "accommodation": "Accommodations",
+        "attraction": "Attractions",
+        "restaurant": "Restaurants"
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+    },
+    "accommodation": {
+        "title": "Accommodations",
+        "no-results": "No accommodations found.",
+        "has-results": "Found {{count}} accommodations."
     }
 }
