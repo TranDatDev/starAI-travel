@@ -105,7 +105,7 @@ const GeneralList: React.FC<GeneralListProps> = ({ fetchData }) => {
             </Pagination>
             <div className={`grid ${isTwoColumns ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
                 {data?.data?.slice(0, 10).map((item: any) => (
-                    <Card key={item._id} className="px-4 py-8 rounded-lg shadow">
+                    <Card key={item._id} className="px-2 py-8 rounded-lg shadow">
                         <CardContent>
                             {' '}
                             <h3 className="font-semibold text-lg">{item.name}</h3>
