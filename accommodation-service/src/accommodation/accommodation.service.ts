@@ -42,6 +42,18 @@ export class AccommodationService {
     return accommodation;
   }
 
+  async findByShortId(shortId: string): Promise<Accommodation> {
+    const accommodation = await this.accommodationModel
+      .findOne({ shortId })
+      .exec();
+    if (!accommodation) {
+      throw new NotFoundException(
+        `Accommodation with shortId ${shortId} not found`,
+      );
+    }
+    return accommodation;
+  }
+
   async update(
     id: string,
     data: Partial<Accommodation>,

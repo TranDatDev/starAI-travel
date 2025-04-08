@@ -12,8 +12,8 @@ import {
 import { AccommodationService } from './accommodation.service';
 import { Accommodation } from './schemas/accommodation.schema';
 
-@Controller('accommodation')
-export class AccommodationController {
+@Controller({ path: '/private/accommodation', version: '1' })
+export class AccommodationPrivateController {
   constructor(private readonly accommodationService: AccommodationService) {}
 
   @Post()

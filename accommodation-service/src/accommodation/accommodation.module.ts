@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AccommodationService } from './accommodation.service';
-import { AccommodationController } from './accommodation.controller';
 import {
   Accommodation,
   AccommodationSchema,
 } from './schemas/accommodation.schema';
+import { AccommodationPrivateController } from './accommodation.private.controller';
+import { AccommodationPublicController } from './accommodation.public.controller';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import {
       { name: Accommodation.name, schema: AccommodationSchema },
     ]),
   ],
-  controllers: [AccommodationController],
+  controllers: [AccommodationPrivateController, AccommodationPublicController],
   providers: [AccommodationService],
 })
 export class AccommodationModule {}

@@ -5,7 +5,7 @@ const AttractionPage = () => {
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">Danh sách Điểm Tham Quan</h2>
-            <GeneralList fetchData={fetchAttractions} />
+            <GeneralList fetchData={fetchAttractions} category="accommodation" />
         </div>
     );
 };

@@ -26,6 +26,7 @@
         "next": "Next"
     },
     "accommodation": {
+        "label": "Accommodation",
         "title": "Accommodations",
         "no-results": "No accommodations found.",
         "has-results": "Found {{count}} accommodations."

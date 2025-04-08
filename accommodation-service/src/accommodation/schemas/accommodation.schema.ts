@@ -3,20 +3,121 @@ import { Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 export type AccommodationDocument = Accommodation & Document;
-
-@Schema()
+import { nanoid } from 'nanoid';
+@Schema({ timestamps: true })
 export class Accommodation {
   @Prop({ type: String, default: uuidv4 })
   _id: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, default: () => nanoid(8), unique: true, index: true })
+  shortId: string;
+
+  @Prop({ required: true, trim: true })
   name: string;
 
-  @Prop()
-  location: string;
+  @Prop({ required: true, trim: true })
+  description: string;
 
-  @Prop()
-  price: number;
+  @Prop({
+    type: {
+      address: { type: String, required: true },
+      hamlet: { type: String, required: true },
+      ward: { type: String, required: true },
+      district: { type: String, required: true },
+      province: { type: String, required: true },
+      postcode: { type: String },
+      country: { type: String, default: 'Vietnam' },
+    },
+    required: true,
+  })
+  location: {
+    address: string;
+    hamlet: string;
+    ward: string;
+    district: string;
+    province: string;
+    postcode?: string;
+    country: string;
+  };
+  coordinates: {
+    type: { type: String; enum: ['Point']; default: 'Point' };
+    coordinates: { type: [Number]; required: true };
+  };
+  @Prop({
+    type: {
+      cancellation: { type: String },
+      checkIn: { type: String },
+      checkOut: { type: String },
+    },
+    default: {},
+  })
+  policies?: {
+    cancellation?: string;
+    checkIn?: string;
+    checkOut?: string;
+  };
+
+  @Prop({
+    enum: [
+      'hotel',
+      'villa',
+      'apartment',
+      'cruise',
+      'guesthouse',
+      'homestay',
+      'campground',
+    ],
+    default: 'homestay',
+  })
+  category: string;
+
+  @Prop({ required: true, min: 0 })
+  minPrice: number;
+
+  @Prop({ required: true, min: 0 })
+  maxPrice: number;
+
+  @Prop({ type: [String], default: [] })
+  images: string[];
+
+  @Prop({ default: 1, min: 1 })
+  maxGuests: number;
+
+  @Prop({ default: 1, min: 1 })
+  maxRooms: number;
+
+  @Prop({ default: 0 })
+  rating: number;
+
+  @Prop({ type: Number, min: 1, max: 5, default: null })
+  officialRating?: number;
+
+  @Prop({ type: Number, min: 0, max: 5, default: 0 })
+  userRating: number;
+
+  @Prop({ default: 0 })
+  reviewsCount: number;
+
+  @Prop({ type: [String], default: [] })
+  amenities: string[];
+
+  @Prop({ type: String })
+  contactPhone?: string;
+
+  @Prop({ type: String })
+  contactEmail?: string;
+
+  @Prop({ default: true })
+  isAvailable: boolean;
+
+  @Prop({ default: false })
+  isFeatured: boolean;
+
+  @Prop({ type: [String], default: [] })
+  tags: string[];
+
+  @Prop({ type: String })
+  ManagerId: string;
 }
 
 export const AccommodationSchema = SchemaFactory.createForClass(Accommodation);

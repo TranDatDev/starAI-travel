@@ -8,6 +8,7 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import Accommodation from '@/pages/Explore/Accommodation';
 import Attraction from '@/pages/Explore/Attraction';
 import Restaurant from '@/pages/Explore/Restaurant';
+import DetailInfo from '@/components/DetailInfo';
 const AppRoutes = (props: Props) => {
     return (
         <BrowserRouter>
@@ -17,8 +18,14 @@ const AppRoutes = (props: Props) => {
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
                     <Route path="accommodation" element={<Accommodation />} />
+                    <Route
+                        path="accommodation/:id"
+                        element={<DetailInfo category="accommodation" />}
+                    />
                     <Route path="attraction" element={<Attraction />} />
+                    <Route path="attraction/:id" element={<DetailInfo category="attraction" />} />
                     <Route path="restaurant" element={<Restaurant />} />
+                    <Route path="restaurant/:id" element={<DetailInfo category="restaurant" />} />
                 </Route>
                 {/* <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route index element={<Dashboard />} />
