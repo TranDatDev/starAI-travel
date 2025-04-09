@@ -39,9 +39,30 @@ export class Accommodation {
     postcode?: string;
     country: string;
   };
+  @Prop({
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      validate: {
+        validator: (value: number[]) =>
+          value.length === 2 &&
+          value[0] >= -180 &&
+          value[0] <= 180 &&
+          value[1] >= -90 &&
+          value[1] <= 90,
+        message:
+          'Coordinates must be [longitude, latitude] within valid range.',
+      },
+    },
+  })
   coordinates: {
-    type: { type: String; enum: ['Point']; default: 'Point' };
-    coordinates: { type: [Number]; required: true };
+    type: 'Point';
+    coordinates: [number, number];
   };
   @Prop({
     type: {
