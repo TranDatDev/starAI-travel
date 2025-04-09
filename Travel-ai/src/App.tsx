@@ -3,7 +3,6 @@ import { Preferences } from './components/Preferences';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import AppRoutes from './routes/AppRoutes';
-import { Helmet } from 'react-helmet-async';
 function App() {
     return (
         <>

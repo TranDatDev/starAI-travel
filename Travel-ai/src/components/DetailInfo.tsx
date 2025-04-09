@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router';
 import { fetchDetail } from '@/services/api';
 import { useReactToPrint } from 'react-to-print';
+import SimpleMap from './SimpleMap';
 interface Props {
     category: string;
 }
@@ -34,6 +35,10 @@ const DetailInfo = ({ category }: Props) => {
                 <h2 className="text-xl">
                     {`${data.location.address}, ${data.location.ward}, ${data.location.district}, ${data.location.province}`}
                 </h2>
+                <SimpleMap
+                    lat={data.coordinates.coordinates.lat}
+                    lng={data.coordinates.coordinates.lng}
+                />
                 <button onClick={() => reactToPrintFn()} className="no-print">
                     Print
                 </button>
