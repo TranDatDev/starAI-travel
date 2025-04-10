@@ -21,21 +21,41 @@ export class Accommodation {
   @Prop({
     type: {
       address: { type: String, required: true },
-      hamlet: { type: String, required: true },
-      ward: { type: String, required: true },
-      district: { type: String, required: true },
-      province: { type: String, required: true },
-      postcode: { type: String },
+      hamlet: { type: String },
+      commune_type: {
+        type: String,
+        enum: ['Phường', 'Xã', 'Thị Trấn'],
+        required: true,
+      },
+      commune_name: { type: String, required: true },
+      district_type: {
+        type: String,
+        enum: [
+          'Quận',
+          'Huyện',
+          'Thị xã',
+          'Thành phố thuộc TPTTTW',
+          'Thành phố thuộc tỉnh',
+        ],
+        required: true,
+      },
+      district_name: { type: String, required: true },
+      province_type: { type: String, enum: ['TPTTTW', 'Tỉnh'], required: true },
+      province_name: { type: String, required: true },
       country: { type: String, default: 'Vietnam' },
+      postcode: { type: String },
     },
     required: true,
   })
   location: {
     address: string;
-    hamlet: string;
-    ward: string;
-    district: string;
-    province: string;
+    hamlet?: string;
+    commune_type: string;
+    commune_name: string;
+    district_type: string;
+    district_name: string;
+    province_type: string;
+    province_name: string;
     postcode?: string;
     country: string;
   };
