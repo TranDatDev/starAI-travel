@@ -38,7 +38,7 @@ export class LocationService {
 
     const district = await this.districtModel.findOne({
       slug: districtSlug,
-      province: province._id,
+      provinceId: province._id,
     });
     if (!district) {
       throw new NotFoundException('District not found in this province');
@@ -53,7 +53,7 @@ export class LocationService {
 
     const commune = await this.communeModel.findOne({
       slug: communeSlug,
-      district: district._id,
+      districtId: district._id,
     });
     if (!commune) {
       throw new NotFoundException('Commune not found in this district');
