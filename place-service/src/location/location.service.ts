@@ -31,7 +31,7 @@ export class LocationService {
 
     if (!districtSlug) {
       return this.districtModel
-        .find({ province: province._id })
+        .find({ provinceId: province._id })
         .sort('name')
         .exec();
     }
@@ -46,7 +46,7 @@ export class LocationService {
 
     if (!communeSlug) {
       return this.communeModel
-        .find({ district: district._id })
+        .find({ districtId: district._id })
         .sort('name')
         .exec();
     }
