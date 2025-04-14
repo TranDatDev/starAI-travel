@@ -1,9 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
+import { generateSlugWithShortId } from 'src/utils/slug.util';
+import { Commune } from 'src/location/schemas/commune.schema';
+import { District } from 'src/location/schemas/district.schema';
+import { Province } from 'src/location/schemas/province.schema';
 
 export type AccommodationDocument = Accommodation & Document;
-import { nanoid } from 'nanoid';
+
 @Schema({ timestamps: true })
 export class Accommodation {
   @Prop({ type: String, default: uuidv4 })
@@ -15,50 +20,24 @@ export class Accommodation {
   @Prop({ required: true, trim: true })
   name: string;
 
+  @Prop({ type: String, unique: true })
+  slug: string;
+
   @Prop({ required: true, trim: true })
   description: string;
 
-  @Prop({
-    type: {
-      address: { type: String, required: true },
-      hamlet: { type: String },
-      commune_type: {
-        type: String,
-        enum: ['Phường', 'Xã', 'Thị Trấn'],
-        required: true,
-      },
-      commune_name: { type: String, required: true },
-      district_type: {
-        type: String,
-        enum: [
-          'Quận',
-          'Huyện',
-          'Thị xã',
-          'Thành phố thuộc TPTTTW',
-          'Thành phố thuộc tỉnh',
-        ],
-        required: true,
-      },
-      district_name: { type: String, required: true },
-      province_type: { type: String, enum: ['TPTTTW', 'Tỉnh'], required: true },
-      province_name: { type: String, required: true },
-      country: { type: String, default: 'Vietnam' },
-      postcode: { type: String },
-    },
-    required: true,
-  })
-  location: {
-    address: string;
-    hamlet?: string;
-    commune_type: string;
-    commune_name: string;
-    district_type: string;
-    district_name: string;
-    province_type: string;
-    province_name: string;
-    postcode?: string;
-    country: string;
-  };
+  @Prop({ required: true, trim: true })
+  address: string;
+
+  @Prop({ type: Types.ObjectId, ref: Commune.name, required: true })
+  communeId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: District.name, required: true })
+  districtId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: Province.name, required: true })
+  provinceId: Types.ObjectId;
+
   @Prop({
     type: {
       type: String,
@@ -127,9 +106,6 @@ export class Accommodation {
   @Prop({ default: 1, min: 1 })
   maxRooms: number;
 
-  @Prop({ default: 0 })
-  rating: number;
-
   @Prop({ type: Number, min: 1, max: 5, default: null })
   officialRating?: number;
 
@@ -152,6 +128,9 @@ export class Accommodation {
   isAvailable: boolean;
 
   @Prop({ default: false })
+  isDeleted: boolean;
+
+  @Prop({ default: false })
   isFeatured: boolean;
 
   @Prop({ type: [String], default: [] })
@@ -162,3 +141,10 @@ export class Accommodation {
 }
 
 export const AccommodationSchema = SchemaFactory.createForClass(Accommodation);
+
+AccommodationSchema.pre<AccommodationDocument>('save', function (next) {
+  if (!this.slug && this.name) {
+    this.slug = generateSlugWithShortId(this.name, this.shortId);
+  }
+  next();
+});

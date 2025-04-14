@@ -4,15 +4,10 @@ import { Model } from 'mongoose';
 import { Province } from '../location/schemas/province.schema';
 import { District } from '../location/schemas/district.schema';
 import { Commune } from '../location/schemas/commune.schema';
-import slugify from 'slugify';
 import { v4 as uuidv4 } from 'uuid';
 import { nanoid } from 'nanoid';
-
+import { generateSlugWithCode } from 'src/utils/slug.util';
 const rawData = require('../resources/location.json');
-
-function generateSlug(name: string, code: string): string {
-  return `${slugify(name, { lower: true, strict: true, locale: 'vi' })}-${code}`;
-}
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
@@ -26,7 +21,7 @@ async function bootstrap() {
   await communeModel.deleteMany();
 
   for (const province of rawData) {
-    const provinceSlug = generateSlug(province.FullName, province.Code);
+    const provinceSlug = generateSlugWithCode(province.FullName, province.Code);
     console.log(`Seeding Province: ${province.FullName} → ${provinceSlug}`);
 
     const provinceDoc = await provinceModel.create({
@@ -41,7 +36,10 @@ async function bootstrap() {
     });
 
     for (const district of province.District) {
-      const districtSlug = generateSlug(district.FullName, district.Code);
+      const districtSlug = generateSlugWithCode(
+        district.FullName,
+        district.Code,
+      );
       console.log(`Seeding District: ${district.FullName} → ${districtSlug}`);
 
       const districtDoc = await districtModel.create({
@@ -60,7 +58,10 @@ async function bootstrap() {
 
       if (Array.isArray(district.Ward)) {
         for (const commune of district.Ward) {
-          const communeSlug = generateSlug(commune.FullName, commune.Code);
+          const communeSlug = generateSlugWithCode(
+            commune.FullName,
+            commune.Code,
+          );
           console.log(`Seeding Commune: ${commune.FullName} → ${communeSlug}`);
 
           await communeModel.create({

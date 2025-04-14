@@ -5,7 +5,7 @@ import {
   Accommodation,
   AccommodationDocument,
 } from './schemas/accommodation.schema';
-
+import { AccommodationFilterDto } from './dto/accommodation-filter.dto';
 @Injectable()
 export class AccommodationService {
   constructor(
@@ -18,18 +18,57 @@ export class AccommodationService {
     return newAccommodation.save();
   }
 
-  async findAll(page: number = 1, limit: number = 10) {
+  async findAll(filterDto: AccommodationFilterDto) {
+    const {
+      name,
+      communeId,
+      districtId,
+      provinceId,
+      category,
+      minPrice,
+      maxPrice,
+      isAvailable,
+      isFeatured,
+      page = 1,
+      limit = 10,
+    } = filterDto;
+
+    const query: any = {
+      isDeleted: false,
+    };
+
+    if (name) {
+      query.name = { $regex: name, $options: 'i' };
+    }
+
+    if (communeId) query.communeId = communeId;
+    if (districtId) query.districtId = districtId;
+    if (provinceId) query.provinceId = provinceId;
+    if (category) query.category = category;
+    if (isAvailable !== undefined) query.isAvailable = isAvailable;
+    if (isFeatured !== undefined) query.isFeatured = isFeatured;
+
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      query.minPrice = {};
+      if (minPrice !== undefined) query.minPrice.$gte = minPrice;
+      if (maxPrice !== undefined) query.minPrice.$lte = maxPrice;
+    }
+
     const skip = (page - 1) * limit;
+
     const [data, total] = await Promise.all([
-      this.accommodationModel.find().skip(skip).limit(limit).exec(),
-      this.accommodationModel.countDocuments(),
+      this.accommodationModel
+        .find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 }),
+      this.accommodationModel.countDocuments(query),
     ]);
 
     return {
       total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
       data,
     };
   }
