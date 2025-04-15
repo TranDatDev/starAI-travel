@@ -5,6 +5,8 @@ import { AccommodationModule } from './accommodation/accommodation.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LocationModule } from './location/location.module';
+import { RestaurantModule } from './restaurant/restaurant.module';
+import { AttractionModule } from './attraction/attraction.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { LocationModule } from './location/location.module';
     }),
     AccommodationModule,
     LocationModule,
+    RestaurantModule,
+    AttractionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
