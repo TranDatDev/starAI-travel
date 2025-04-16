@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -6,11 +10,14 @@ import {
   AccommodationDocument,
 } from './schemas/accommodation.schema';
 import { AccommodationFilterDto } from './dto/accommodation-filter.dto';
+import { SupabaseService } from '../supabase/supabase.service';
+
 @Injectable()
 export class AccommodationService {
   constructor(
     @InjectModel(Accommodation.name)
     private accommodationModel: Model<AccommodationDocument>,
+    private readonly supabaseService: SupabaseService,
   ) {}
 
   async create(data: Partial<Accommodation>): Promise<Accommodation> {
@@ -111,5 +118,21 @@ export class AccommodationService {
     if (!result) {
       throw new NotFoundException(`Accommodation with ID ${id} not found`);
     }
+  }
+
+  async addImageToAccommodation(
+    shortId: string,
+    imageUrl: string,
+  ): Promise<Accommodation> {
+    const accommodation = await this.findByShortId(shortId);
+    if (!accommodation) {
+      throw new NotFoundException(
+        `Accommodation with shortId ${shortId} not found`,
+      );
+    }
+
+    // Thêm URL ảnh vào mảng images trong cơ sở dữ liệu
+    accommodation.images.push(imageUrl);
+    return (accommodation as AccommodationDocument).save();
   }
 }

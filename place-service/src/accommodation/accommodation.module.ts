@@ -7,7 +7,7 @@ import {
 } from './schemas/accommodation.schema';
 import { AccommodationPrivateController } from './accommodation.private.controller';
 import { AccommodationPublicController } from './accommodation.public.controller';
-
+import { SupabaseService } from '../supabase/supabase.service';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -15,6 +15,6 @@ import { AccommodationPublicController } from './accommodation.public.controller
     ]),
   ],
   controllers: [AccommodationPrivateController, AccommodationPublicController],
-  providers: [AccommodationService],
+  providers: [AccommodationService, SupabaseService],
 })
 export class AccommodationModule {}
