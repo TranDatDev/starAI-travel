@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class AccommodationFilterDto {
+export class RestaurantFilterDto {
   @IsOptional()
   @IsString()
   name?: string;
@@ -26,13 +26,12 @@ export class AccommodationFilterDto {
 
   @IsOptional()
   @IsEnum([
-    'hotel',
-    'villa',
-    'apartment',
-    'cruise',
-    'guesthouse',
-    'homestay',
-    'campground',
+    'buffet',
+    'casual',
+    'fine-dining',
+    'cafe',
+    'street-food',
+    'fast-food',
   ])
   category?: string;
 
@@ -51,10 +50,6 @@ export class AccommodationFilterDto {
   isAvailable?: boolean;
 
   @IsOptional()
-  @IsBoolean()
-  isFeatured?: boolean;
-
-  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   page?: number;
@@ -65,26 +60,6 @@ export class AccommodationFilterDto {
   limit?: number;
 
   @IsOptional()
-  @IsString()
-  communeSlug?: string;
-
-  @IsOptional()
-  @IsString()
-  districtSlug?: string;
-
-  @IsOptional()
-  @IsString()
-  provinceSlug?: string;
-
-  @IsOptional()
-  @IsEnum(['province', 'district', 'commune'])
-  sortBy?: 'province' | 'district' | 'commune';
-
-  @IsOptional()
-  @IsEnum(['asc', 'desc'])
-  sortOrder?: 'asc' | 'desc';
-
-  @IsOptional()
-  @IsString()
-  search?: string;
+  @IsBoolean()
+  isFeatured?: boolean;
 }

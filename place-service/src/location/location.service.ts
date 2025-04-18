@@ -65,4 +65,21 @@ export class LocationService {
       commune,
     };
   }
+
+  async findCommunesByDistrictOrProvince(
+    districtId?: string,
+    provinceId?: string,
+  ): Promise<CommuneDocument[]> {
+    let query = {};
+
+    if (districtId) {
+      query = { districtId };
+    } else if (provinceId) {
+      const districts = await this.districtModel.find({ provinceId }).exec();
+      const districtIds = districts.map((d) => d._id);
+      query = { districtId: { $in: districtIds } };
+    }
+
+    return this.communeModel.find(query).exec();
+  }
 }

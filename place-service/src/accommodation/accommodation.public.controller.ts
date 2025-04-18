@@ -23,6 +23,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { SupabaseService } from '../supabase/supabase.service';
+import { AccommodationDto } from './dto/accommodation.dto';
 
 @ApiTags('API công cộng: Cơ sở lưu trú')
 @Controller({ path: '/public/accommodation', version: '1' })
@@ -68,6 +69,13 @@ export class AccommodationPublicController {
   })
   async findAll(@Query() filterDto: AccommodationFilterDto) {
     return this.accommodationService.findAll(filterDto);
+  }
+
+  @Get('/with-location')
+  async findAllWithLocation(): Promise<AccommodationDto[]> {
+    const accommodations =
+      await this.accommodationService.findAllWithLocation();
+    return accommodations.map((acc) => new AccommodationDto(acc));
   }
 
   @Get(':shortId')

@@ -11,7 +11,8 @@ import {
 } from './schemas/accommodation.schema';
 import { AccommodationFilterDto } from './dto/accommodation-filter.dto';
 import { SupabaseService } from '../supabase/supabase.service';
-
+import mongoose from 'mongoose';
+import { buildLocationAggregation } from 'src/shared/helpers/build-location-aggregation.helper';
 @Injectable()
 export class AccommodationService {
   constructor(
@@ -25,58 +26,93 @@ export class AccommodationService {
     return newAccommodation.save();
   }
 
-  async findAll(filterDto: AccommodationFilterDto) {
+  async findAll(filterDto: AccommodationFilterDto): Promise<any> {
     const {
-      name,
+      search,
       communeId,
       districtId,
       provinceId,
+      communeSlug,
+      districtSlug,
+      provinceSlug,
+      sortBy,
+      sortOrder,
+      page = 1,
+      limit = 10,
       category,
       minPrice,
       maxPrice,
       isAvailable,
       isFeatured,
-      page = 1,
-      limit = 10,
     } = filterDto;
 
-    const query: any = {
-      isDeleted: false,
-    };
+    const baseMatch: any = {};
 
-    if (name) {
-      query.name = { $regex: name, $options: 'i' };
+    // Tìm kiếm bằng thanh tìm kiếm
+    if (search) {
+      baseMatch.$or = [
+        { slug: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
     }
 
-    if (communeId) query.communeId = communeId;
-    if (districtId) query.districtId = districtId;
-    if (provinceId) query.provinceId = provinceId;
-    if (category) query.category = category;
-    if (isAvailable !== undefined) query.isAvailable = isAvailable;
-    if (isFeatured !== undefined) query.isFeatured = isFeatured;
+    if (category) baseMatch.category = category;
+    if (typeof isAvailable === 'boolean') baseMatch.isAvailable = isAvailable;
+    if (typeof isFeatured === 'boolean') baseMatch.isFeatured = isFeatured;
 
+    // tìm kiếm theo giá
     if (minPrice !== undefined || maxPrice !== undefined) {
-      query.minPrice = {};
-      if (minPrice !== undefined) query.minPrice.$gte = minPrice;
-      if (maxPrice !== undefined) query.minPrice.$lte = maxPrice;
+      if (minPrice !== undefined) baseMatch.maxPrice = { $gte: minPrice };
+      if (maxPrice !== undefined) baseMatch.minPrice = { $lte: maxPrice };
     }
 
-    const skip = (page - 1) * limit;
-
-    const [data, total] = await Promise.all([
-      this.accommodationModel
-        .find(query)
-        .skip(skip)
-        .limit(limit)
-        .sort({ createdAt: -1 }),
-      this.accommodationModel.countDocuments(query),
-    ]);
+    const projectFields = {
+      shortId: 1,
+      name: 1,
+      description: 1,
+      minPrice: 1,
+      maxPrice: 1,
+      category: 1,
+      createdAt: 1,
+      // Hợp nhất địa chỉ thành một trường duy nhất
+      fullAddress: {
+        $concat: [
+          '$address',
+          ', ',
+          { $ifNull: ['$commune.fullName', ''] },
+          ', ',
+          { $ifNull: ['$district.fullName', ''] },
+          ', ',
+          { $ifNull: ['$province.fullName', ''] },
+        ],
+      },
+      _id: 0,
+    };
+    // tổng hợp ống dẫn dữ liệu theo vị trí hành chính
+    const pipeline = buildLocationAggregation({
+      baseMatch,
+      communeId,
+      districtId,
+      provinceId,
+      communeSlug,
+      districtSlug,
+      provinceSlug,
+      sortBy,
+      sortOrder,
+      page,
+      limit,
+      projectFields,
+    });
+    // tổng hợp kết quả từ dữ liệu nhận được theo ống dẫn
+    const result = await this.accommodationModel.aggregate(pipeline).exec();
+    const data = result[0].data;
+    const total = result[0].total[0]?.count || 0;
 
     return {
+      data,
       total,
       page,
       limit,
-      data,
     };
   }
 
@@ -134,5 +170,20 @@ export class AccommodationService {
     // Thêm URL ảnh vào mảng images trong cơ sở dữ liệu
     accommodation.images.push(imageUrl);
     return (accommodation as AccommodationDocument).save();
+  }
+
+  async findAllWithLocation(): Promise<AccommodationDocument[]> {
+    return this.accommodationModel
+      .find()
+      .populate({
+        path: 'communeId',
+        populate: {
+          path: 'districtId',
+          populate: {
+            path: 'provinceId',
+          },
+        },
+      })
+      .exec();
   }
 }

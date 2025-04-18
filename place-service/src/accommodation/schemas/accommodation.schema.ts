@@ -32,12 +32,6 @@ export class Accommodation {
   @Prop({ type: Types.ObjectId, ref: Commune.name, required: true })
   communeId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: District.name, required: true })
-  districtId: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: Province.name, required: true })
-  provinceId: Types.ObjectId;
-
   @Prop({
     type: {
       type: String,
