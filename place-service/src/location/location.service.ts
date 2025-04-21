@@ -26,7 +26,9 @@ export class LocationService {
       return this.getAllProvinces();
     }
 
-    const province = await this.provinceModel.findOne({ slug: provinceSlug });
+    const province = await this.provinceModel.findOne({
+      slug: { $regex: `^${provinceSlug}`, $options: 'i' },
+    });
     if (!province) throw new NotFoundException('Province not found');
 
     if (!districtSlug) {
@@ -37,7 +39,7 @@ export class LocationService {
     }
 
     const district = await this.districtModel.findOne({
-      slug: districtSlug,
+      slug: { $regex: `^${districtSlug}`, $options: 'i' },
       provinceId: province._id,
     });
     if (!district) {
@@ -52,7 +54,7 @@ export class LocationService {
     }
 
     const commune = await this.communeModel.findOne({
-      slug: communeSlug,
+      slug: { $regex: `^${communeSlug}`, $options: 'i' },
       districtId: district._id,
     });
     if (!commune) {

@@ -4,8 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { nanoid } from 'nanoid';
 import { generateSlugWithShortId } from 'src/utils/slug.util';
 import { Commune } from 'src/location/schemas/commune.schema';
-import { District } from 'src/location/schemas/district.schema';
-import { Province } from 'src/location/schemas/province.schema';
 
 export type RestaurantDocument = Restaurant & Document;
 
@@ -31,12 +29,6 @@ export class Restaurant {
 
   @Prop({ type: Types.ObjectId, ref: Commune.name, required: true })
   communeId: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: District.name, required: true })
-  districtId: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: Province.name, required: true })
-  provinceId: Types.ObjectId;
 
   @Prop({
     type: {
@@ -117,7 +109,7 @@ export class Restaurant {
   tags: string[];
 
   @Prop({ type: String })
-  managerId: string;
+  ManagerId: string;
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);

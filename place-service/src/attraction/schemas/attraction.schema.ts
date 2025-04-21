@@ -4,11 +4,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { nanoid } from 'nanoid';
 import { generateSlugWithShortId } from 'src/utils/slug.util';
 import { Commune } from 'src/location/schemas/commune.schema';
+import { District } from 'src/location/schemas/district.schema';
+import { Province } from 'src/location/schemas/province.schema';
 
-export type AccommodationDocument = Accommodation & Document;
+export type AttractionDocument = Attraction & Document;
 
 @Schema({ timestamps: true })
-export class Accommodation {
+export class Attraction {
   @Prop({ type: String, default: uuidv4 })
   _id: string;
 
@@ -29,6 +31,12 @@ export class Accommodation {
 
   @Prop({ type: Types.ObjectId, ref: Commune.name, required: true })
   communeId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: District.name, required: true })
+  districtId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: Province.name, required: true })
+  provinceId: Types.ObjectId;
 
   @Prop({
     type: {
@@ -55,48 +63,24 @@ export class Accommodation {
     type: 'Point';
     coordinates: [number, number];
   };
-  @Prop({
-    type: {
-      cancellation: { type: String },
-      checkIn: { type: String },
-      checkOut: { type: String },
-    },
-    default: {},
-  })
-  policies?: {
-    cancellation?: string;
-    checkIn?: string;
-    checkOut?: string;
-  };
 
   @Prop({
     enum: [
-      'hotel',
-      'villa',
-      'apartment',
-      'cruise',
-      'guesthouse',
-      'homestay',
-      'campground',
+      'natural',
+      'historical',
+      'museum',
+      'amusement-park',
+      'cultural',
+      'religious',
+      'landscape',
+      'shopping',
     ],
-    default: 'homestay',
+    default: 'natural',
   })
   category: string;
 
-  @Prop({ required: true, min: 0 })
-  minPrice: number;
-
-  @Prop({ required: true, min: 0 })
-  maxPrice: number;
-
   @Prop({ type: [String], default: [] })
   images: string[];
-
-  @Prop({ default: 1, min: 1 })
-  maxGuests: number;
-
-  @Prop({ default: 1, min: 1 })
-  maxRooms: number;
 
   @Prop({ type: Number, min: 1, max: 5, default: null })
   officialRating?: number;
@@ -107,14 +91,17 @@ export class Accommodation {
   @Prop({ default: 0 })
   reviewsCount: number;
 
-  @Prop({ type: [String], default: [] })
-  amenities: string[];
-
   @Prop({ type: String })
   contactPhone?: string;
 
   @Prop({ type: String })
   contactEmail?: string;
+
+  @Prop({ type: String })
+  website?: string;
+
+  @Prop({ type: [String], default: [] })
+  openingHours?: string[];
 
   @Prop({ default: true })
   isAvailable: boolean;
@@ -132,9 +119,9 @@ export class Accommodation {
   ManagerId: string;
 }
 
-export const AccommodationSchema = SchemaFactory.createForClass(Accommodation);
+export const AttractionSchema = SchemaFactory.createForClass(Attraction);
 
-AccommodationSchema.pre<AccommodationDocument>('save', function (next) {
+AttractionSchema.pre<AttractionDocument>('save', function (next) {
   if (!this.slug && this.name) {
     this.slug = generateSlugWithShortId(this.name, this.shortId);
   }

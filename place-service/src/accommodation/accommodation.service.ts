@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -11,7 +7,6 @@ import {
 } from './schemas/accommodation.schema';
 import { AccommodationFilterDto } from './dto/accommodation-filter.dto';
 import { SupabaseService } from '../supabase/supabase.service';
-import mongoose from 'mongoose';
 import { buildLocationAggregation } from 'src/shared/helpers/build-location-aggregation.helper';
 @Injectable()
 export class AccommodationService {

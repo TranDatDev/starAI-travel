@@ -50,6 +50,10 @@ export class RestaurantFilterDto {
   isAvailable?: boolean;
 
   @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   page?: number;
@@ -60,6 +64,43 @@ export class RestaurantFilterDto {
   limit?: number;
 
   @IsOptional()
-  @IsBoolean()
-  isFeatured?: boolean;
+  @IsString()
+  communeSlug?: string;
+
+  @IsOptional()
+  @IsString()
+  districtSlug?: string;
+
+  @IsOptional()
+  @IsString()
+  provinceSlug?: string;
+
+  @IsOptional()
+  @IsEnum([
+    'createdAt',
+    'name',
+    'minPrice',
+    'maxPrice',
+    'userRating',
+    'officialRating',
+    'reviewsCount',
+    'isFeatured',
+  ])
+  sortBy?:
+    | 'createdAt'
+    | 'name'
+    | 'minPrice'
+    | 'maxPrice'
+    | 'userRating'
+    | 'officialRating'
+    | 'reviewsCount'
+    | 'isFeatured';
+
+  @IsOptional()
+  @IsEnum(['asc', 'desc'])
+  sortOrder?: 'asc' | 'desc';
+
+  @IsOptional()
+  @IsString()
+  search?: string;
 }

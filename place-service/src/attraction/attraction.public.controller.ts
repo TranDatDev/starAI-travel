@@ -10,9 +10,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AccommodationService } from './accommodation.service';
-import { Accommodation } from './schemas/accommodation.schema';
-import { AccommodationFilterDto } from './dto/accommodation-filter.dto';
+import { AttractionService } from './attraction.service';
+import { Attraction } from './schemas/attraction.schema';
+import { AttractionFilterDto } from './dto/attraction-filter.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -23,23 +23,23 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { SupabaseService } from '../supabase/supabase.service';
-import { AccommodationDto } from './dto/accommodation.dto';
+import { AttractionDto } from './dto/attraction.dto';
 
-@ApiTags('API công cộng: Cơ sở lưu trú')
-@Controller({ path: '/public/accommodation', version: '1' })
-export class AccommodationPublicController {
+@ApiTags('API công cộng: Điểm du lịch')
+@Controller({ path: '/public/attraction', version: '1' })
+export class AttractionPublicController {
   constructor(
-    private readonly accommodationService: AccommodationService,
+    private readonly attractionService: AttractionService,
     private readonly supabaseService: SupabaseService,
   ) {}
 
   @Get()
-  @ApiOperation({ summary: 'Lấy danh sách các cơ sở lưu trú' })
+  @ApiOperation({ summary: 'Lấy danh sách các điểm du lịch' })
   @ApiQuery({
     name: 'name',
     required: false,
-    description: 'Tên cơ sở lưu trú',
-    example: 'Nhà nghỉ Bình Minh',
+    description: 'Tên địa điểm',
+    example: 'Điểm du lịch Bình Minh',
   })
   @ApiQuery({
     name: 'communeId',
@@ -56,7 +56,7 @@ export class AccommodationPublicController {
     required: false,
     example: 'FDGn6oak',
   })
-  @ApiQuery({ name: 'category', required: false, example: 'hotel' })
+  @ApiQuery({ name: 'category', required: false, example: 'natural' })
   @ApiQuery({ name: 'minPrice', required: false, example: 100000 })
   @ApiQuery({ name: 'maxPrice', required: false, example: 1000000 })
   @ApiQuery({ name: 'isAvailable', required: false, example: true })
@@ -65,45 +65,43 @@ export class AccommodationPublicController {
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiResponse({
     status: 200,
-    description: 'Lấy danh sách cơ sở lưu trú thành công',
+    description: 'Lấy danh sách điểm du lịch thành công',
   })
-  async findAll(@Query() filterDto: AccommodationFilterDto) {
-    return this.accommodationService.findAll(filterDto);
+  async findAll(@Query() filterDto: AttractionFilterDto) {
+    return this.attractionService.findAll(filterDto);
   }
 
   @Get('/with-location')
-  async findAllWithLocation(): Promise<AccommodationDto[]> {
-    const accommodations =
-      await this.accommodationService.findAllWithLocation();
-    return accommodations.map((acc) => new AccommodationDto(acc));
+  async findAllWithLocation(): Promise<AttractionDto[]> {
+    const attractions = await this.attractionService.findAllWithLocation();
+    return attractions.map((acc) => new AttractionDto(acc));
   }
 
   @Get(':shortId')
-  @ApiOperation({ summary: 'Lấy cơ sở lưu trú theo mã ngắn (short ID)' })
+  @ApiOperation({ summary: 'Lấy điểm du lịch theo mã ngắn (short ID)' })
   @ApiParam({
     name: 'shortId',
-    description: 'Mã ngắn của cơ sở lưu trú',
+    description: 'Mã ngắn của điểm du lịch',
     example: 'AbwmzcwJ',
   })
-  @ApiResponse({ status: 200, description: 'Lấy cơ sở lưu trú thành công' })
+  @ApiResponse({ status: 200, description: 'Lấy điểm du lịch thành công' })
   @ApiResponse({
     status: 404,
-    description: 'Không tìm thấy cơ sở lưu trú với mã ngắn này',
+    description: 'Không tìm thấy điểm du lịch với mã ngắn này',
   })
-  async findOne(@Param('shortId') shortId: string): Promise<Accommodation> {
-    const accommodation =
-      await this.accommodationService.findByShortId(shortId);
-    if (!accommodation) {
+  async findOne(@Param('shortId') shortId: string): Promise<Attraction> {
+    const attraction = await this.attractionService.findByShortId(shortId);
+    if (!attraction) {
       throw new NotFoundException(
-        `Accommodation with shortId ${shortId} not found`,
+        `Attraction with shortId ${shortId} not found`,
       );
     }
-    return accommodation;
+    return attraction;
   }
 
   @Post(':shortId/upload-image')
   @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: 'Upload ảnh cho cơ sở lưu trú' })
+  @ApiOperation({ summary: 'Upload ảnh cho điểm du lịch' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -140,21 +138,20 @@ export class AccommodationPublicController {
     // Upload ảnh và lấy URL
     const imageUrl = await this.supabaseService.processAndUploadImage(
       file.buffer,
-      'accommodation-files',
+      'attraction-files',
       fileName,
     );
 
     // Cập nhật URL ảnh vào cơ sở dữ liệu MongoDB
-    const updatedAccommodation =
-      await this.accommodationService.addImageToAccommodation(
-        shortId,
-        imageUrl,
-      );
+    const updatedAttraction = await this.attractionService.addImageToAttraction(
+      shortId,
+      imageUrl,
+    );
 
     return {
       message: 'Ảnh đã được upload và lưu thành công',
       imageUrl,
-      accommodation: updatedAccommodation,
+      attraction: updatedAttraction,
     };
   }
 }

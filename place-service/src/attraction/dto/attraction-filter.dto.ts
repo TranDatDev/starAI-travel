@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class AccommodationFilterDto {
+export class AttractionFilterDto {
   @IsOptional()
   @IsString()
   name?: string;
@@ -26,13 +26,14 @@ export class AccommodationFilterDto {
 
   @IsOptional()
   @IsEnum([
-    'hotel',
-    'villa',
-    'apartment',
-    'cruise',
-    'guesthouse',
-    'homestay',
-    'campground',
+    'natural',
+    'historical',
+    'museum',
+    'amusement-park',
+    'cultural',
+    'religious',
+    'landscape',
+    'shopping',
   ])
   category?: string;
 
