@@ -8,18 +8,34 @@ import {
   Patch,
   NotFoundException,
   Query,
+  UploadedFile,
+  UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiConsumes,
+  ApiBody,
+} from '@nestjs/swagger';
+import { SupabaseService } from '../supabase/supabase.service';
+import { generateSlug } from 'src/utils/slug.util';
+import * as path from 'path';
 import { RestaurantService } from './restaurant.service';
 import { Restaurant } from './schemas/restaurant.schema';
 import { RestaurantFilterDto } from './dto/restaurant-filter.dto';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-
 @ApiTags('API nội bộ: Nhà hàng')
 @Controller({ path: '/private/restaurant', version: '1' })
 export class RestaurantPrivateController {
-  constructor(private readonly restaurantService: RestaurantService) {}
+  constructor(
+    private readonly restaurantService: RestaurantService,
+    private readonly supabaseService: SupabaseService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Tạo mới một nhà hàng' })
@@ -97,5 +113,63 @@ export class RestaurantPrivateController {
   async remove(@Param('id') id: string): Promise<{ message: string }> {
     await this.restaurantService.remove(id);
     return { message: `Restaurant with ID ${id} has been deleted` };
+  }
+
+  @Post(':shortId/upload-image')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Upload ảnh cho nhà hàng' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Tải ảnh lên thành công, trả về URL',
+  })
+  @ApiResponse({ status: 400, description: 'File không hợp lệ' })
+  async uploadImage(
+    @Param('shortId') shortId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Không có file nào được tải lên');
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Định dạng ảnh không hợp lệ');
+    }
+
+    // Tạo tên file duy nhất
+    const originalName = file.originalname;
+    const baseName = path.basename(originalName, path.extname(originalName));
+    const slugName = generateSlug(baseName);
+    const fileName = `${shortId}/${Date.now()}-${slugName}.webp`;
+    // Upload ảnh và lấy URL
+    const imageUrl = await this.supabaseService.processAndUploadImage(
+      file.buffer,
+      'restaurant-files',
+      fileName,
+    );
+
+    // Cập nhật URL ảnh vào cơ sở dữ liệu MongoDB
+    const updatedRestaurant = await this.restaurantService.addImageToRestaurant(
+      shortId,
+      imageUrl,
+    );
+
+    return {
+      message: 'Ảnh đã được upload và lưu thành công',
+      imageUrl,
+      restaurant: updatedRestaurant,
+    };
   }
 }

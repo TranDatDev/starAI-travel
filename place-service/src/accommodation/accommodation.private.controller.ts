@@ -8,19 +8,34 @@ import {
   Patch,
   NotFoundException,
   Query,
+  UploadedFile,
+  UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiConsumes,
+  ApiBody,
+} from '@nestjs/swagger';
+import { SupabaseService } from '../supabase/supabase.service';
+import { generateSlug } from 'src/utils/slug.util';
+import * as path from 'path';
 import { AccommodationService } from './accommodation.service';
 import { Accommodation } from './schemas/accommodation.schema';
 import { AccommodationFilterDto } from './dto/accommodation-filter.dto';
 import { CreateAccommodationDto } from './dto/create-accommodation.dto';
 import { UpdateAccommodationDto } from './dto/update-accommodation.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-
 @ApiTags('API nội bộ: Cơ sở lưu trú')
 @Controller({ path: '/private/accommodation', version: '1' })
 export class AccommodationPrivateController {
-  constructor(private readonly accommodationService: AccommodationService) {}
-
+  constructor(
+    private readonly accommodationService: AccommodationService,
+    private readonly supabaseService: SupabaseService,
+  ) {}
   @Post()
   @ApiOperation({ summary: 'Tạo mới một cơ sở lưu trú' })
   @ApiResponse({
@@ -99,5 +114,64 @@ export class AccommodationPrivateController {
   async remove(@Param('id') id: string): Promise<{ message: string }> {
     await this.accommodationService.remove(id);
     return { message: `Accommodation with ID ${id} has been deleted` };
+  }
+
+  @Post(':shortId/upload-image')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Upload ảnh cho cơ sở lưu trú' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Tải ảnh lên thành công, trả về URL',
+  })
+  @ApiResponse({ status: 400, description: 'File không hợp lệ' })
+  async uploadImage(
+    @Param('shortId') shortId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Không có file nào được tải lên');
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Định dạng ảnh không hợp lệ');
+    }
+
+    // Tạo tên file duy nhất
+    const originalName = file.originalname;
+    const baseName = path.basename(originalName, path.extname(originalName));
+    const slugName = generateSlug(baseName);
+    const fileName = `${shortId}/${Date.now()}-${slugName}.webp`;
+    // Upload ảnh và lấy URL
+    const imageUrl = await this.supabaseService.processAndUploadImage(
+      file.buffer,
+      'accommodation-files',
+      fileName,
+    );
+
+    // Cập nhật URL ảnh vào cơ sở dữ liệu MongoDB
+    const updatedAccommodation =
+      await this.accommodationService.addImageToAccommodation(
+        shortId,
+        imageUrl,
+      );
+
+    return {
+      message: 'Ảnh đã được upload và lưu thành công',
+      imageUrl,
+      accommodation: updatedAccommodation,
+    };
   }
 }

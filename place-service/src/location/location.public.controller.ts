@@ -7,30 +7,57 @@ import { ApiOperation, ApiQuery, ApiTags, ApiResponse } from '@nestjs/swagger';
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
-  @Get()
-  @ApiOperation({ summary: 'Lấy danh sách tỉnh, huyện, xã theo slug' })
-  @ApiQuery({
-    name: 'p',
-    required: false,
-    description: 'Slug của tỉnh/thành phố (ví dụ: ho-chi-minh)',
-    example: 'ho-chi-minh',
+  @Get('/provinces')
+  @ApiOperation({ summary: 'Lấy danh sách tất cả các tỉnh/tpttw' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lấy danh sách tỉnh thành công',
+  })
+  async getProvinces() {
+    return this.locationService.getProvinces();
+  }
+
+  @Get('/districts')
+  @ApiOperation({
+    summary:
+      'Lấy danh sách tất cả các quận/huyện và các quận/huyện theo tỉnh/tptttw',
   })
   @ApiQuery({
-    name: 'd',
-    required: false,
-    description: 'Slug của quận/huyện (ví dụ: quan-1)',
-    example: 'quan-1',
-  })
-  @ApiQuery({
-    name: 'c',
-    required: false,
-    description: 'Slug của phường/xã (ví dụ: phuong-ben-nghe)',
-    example: 'phuong-ben-nghe',
+    name: 'by',
+    required: true,
+    description: 'Slug của tỉnh/tpttw',
   })
   @ApiResponse({
     status: 200,
-    description: 'Danh sách địa phương được tìm thấy.',
+    description: 'Danh sách quận/huyện được tìm thấy.',
   })
+  async getDistricts(@Query('by') slug?: string) {
+    if (slug) {
+      return this.locationService.getDistrictsByProvince(slug);
+    }
+    return this.locationService.getDistricts();
+  }
+
+  @Get('/communes')
+  @ApiOperation({
+    summary: 'Lấy danh sách tất cả các xã và các xã theo quận/huyện',
+  })
+  @ApiQuery({
+    name: 'by',
+    required: false,
+    description: 'Slug của quận/huyện',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Danh sách xã được tìm thấy.',
+  })
+  async getCommunes(@Query('by') slug?: string) {
+    if (slug) {
+      return this.locationService.getCommunesByDistrict(slug);
+    }
+    return this.locationService.getCommunes();
+  }
+
   async getLocation(
     @Query('p') provinceSlug?: string,
     @Query('d') districtSlug?: string,

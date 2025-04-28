@@ -26,8 +26,71 @@
         "next": "下一页"
     },
     "accommodation": {
+        "label": "住宿",
         "title": "住宿",
         "no-results": "未找到住宿。",
         "has-results": "找到 {{count}} 个住宿。"
+    },
+    "currency": {
+        "type": "CNY",
+        "exchange-rate": "0.00028",
+        "symbol": "¥"
+    },
+    "details": {
+        "info": {
+            "label": "信息",
+            "description": "详细信息描述",
+            "min-price": {
+                "label": "最低价格",
+                "description": "最低价格（按越南盾汇率换算）"
+            },
+            "max-price": {
+                "label": "最高价格",
+                "description": "最高价格（按越南盾汇率换算）"
+            },
+            "max-guests": {
+                "label": "最大客人数",
+                "description": "可容纳的最大客人数"
+            },
+            "max-rooms": {
+                "label": "最大房间数量",
+                "description": "可租用的最大房间数量"
+            },
+            "email": {
+                "label": "电子邮件",
+                "description": "电子邮件地址"
+            },
+            "phone": {
+                "label": "电话",
+                "description": "电话号码（国际标准）"
+            }
+        },
+        "img": {
+            "label": "图片",
+            "description": "包含多张图片",
+            "expand": {
+                "label": "扩展图片"
+            }
+        },
+        "user-rating": {
+            "label": "用户评分",
+            "description": "用户对住宿的评分"
+        },
+        "download": {
+            "label": "下载信息",
+            "description": "下载详细信息"
+        },
+        "file-type-docx-download-label": "详细信息"
+    },
+    "filter": {
+        "commune": {
+            "label": "选择乡/镇/街道"
+        },
+        "district": {
+            "label": "选择区/县"
+        },
+        "province": {
+            "label": "选择省/直辖市"
+        }
     }
 }

@@ -19,26 +19,20 @@ import {
   ApiResponse,
   ApiQuery,
   ApiParam,
-  ApiConsumes,
-  ApiBody,
 } from '@nestjs/swagger';
-import { SupabaseService } from '../supabase/supabase.service';
 import { AttractionDto } from './dto/attraction.dto';
 
 @ApiTags('API công cộng: Điểm du lịch')
 @Controller({ path: '/public/attraction', version: '1' })
 export class AttractionPublicController {
-  constructor(
-    private readonly attractionService: AttractionService,
-    private readonly supabaseService: SupabaseService,
-  ) {}
+  constructor(private readonly attractionService: AttractionService) {}
 
   @Get()
   @ApiOperation({ summary: 'Lấy danh sách các điểm du lịch' })
   @ApiQuery({
     name: 'name',
     required: false,
-    description: 'Tên địa điểm',
+    description: 'Tên điểm du lịch',
     example: 'Điểm du lịch Bình Minh',
   })
   @ApiQuery({
@@ -56,7 +50,7 @@ export class AttractionPublicController {
     required: false,
     example: 'FDGn6oak',
   })
-  @ApiQuery({ name: 'category', required: false, example: 'natural' })
+  @ApiQuery({ name: 'category', required: false, example: 'buffet' })
   @ApiQuery({ name: 'minPrice', required: false, example: 100000 })
   @ApiQuery({ name: 'maxPrice', required: false, example: 1000000 })
   @ApiQuery({ name: 'isAvailable', required: false, example: true })
@@ -66,6 +60,7 @@ export class AttractionPublicController {
   @ApiResponse({
     status: 200,
     description: 'Lấy danh sách điểm du lịch thành công',
+    type: [AttractionFilterDto],
   })
   async findAll(@Query() filterDto: AttractionFilterDto) {
     return this.attractionService.findAll(filterDto);
@@ -97,61 +92,5 @@ export class AttractionPublicController {
       );
     }
     return attraction;
-  }
-
-  @Post(':shortId/upload-image')
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: 'Upload ảnh cho điểm du lịch' })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Tải ảnh lên thành công, trả về URL',
-  })
-  @ApiResponse({ status: 400, description: 'File không hợp lệ' })
-  async uploadImage(
-    @Param('shortId') shortId: string,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    if (!file) {
-      throw new BadRequestException('Không có file nào được tải lên');
-    }
-
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!allowedTypes.includes(file.mimetype)) {
-      throw new BadRequestException('Định dạng ảnh không hợp lệ');
-    }
-
-    // Tạo tên file duy nhất
-    const fileName = `${shortId}/${Date.now()}-${file.originalname}`;
-
-    // Upload ảnh và lấy URL
-    const imageUrl = await this.supabaseService.processAndUploadImage(
-      file.buffer,
-      'attraction-files',
-      fileName,
-    );
-
-    // Cập nhật URL ảnh vào cơ sở dữ liệu MongoDB
-    const updatedAttraction = await this.attractionService.addImageToAttraction(
-      shortId,
-      imageUrl,
-    );
-
-    return {
-      message: 'Ảnh đã được upload và lưu thành công',
-      imageUrl,
-      attraction: updatedAttraction,
-    };
   }
 }

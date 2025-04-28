@@ -4,7 +4,9 @@ import { Model } from 'mongoose';
 import { Province, ProvinceDocument } from './schemas/province.schema';
 import { District, DistrictDocument } from './schemas/district.schema';
 import { Commune, CommuneDocument } from './schemas/commune.schema';
-
+import { GetProvinceDto } from './dto/get-province.dto';
+import { GetDistrictDto } from './dto/get-district.dto';
+import { GetCommuneDto } from './dto/get-commune.dto';
 @Injectable()
 export class LocationService {
   constructor(
@@ -83,5 +85,62 @@ export class LocationService {
     }
 
     return this.communeModel.find(query).exec();
+  }
+  async getProvinces(): Promise<GetProvinceDto[]> {
+    const provinces = await this.provinceModel.find().exec();
+    return provinces.map((province) => ({
+      shortId: province.shortId,
+      fullName: province.fullName || '',
+    }));
+  }
+
+  async getDistricts(): Promise<GetDistrictDto[]> {
+    const districts = await this.districtModel.find().exec();
+    return districts.map((district) => ({
+      shortId: district.shortId,
+      fullName: district.fullName || '',
+    }));
+  }
+
+  async getCommunes(): Promise<GetCommuneDto[]> {
+    const communes = await this.communeModel.find().exec();
+    return communes.map((commune) => ({
+      shortId: commune.shortId,
+      fullName: commune.fullName || '',
+    }));
+  }
+
+  async getDistrictsByProvince(slug: string): Promise<GetDistrictDto[]> {
+    const province = await this.provinceModel.findOne({
+      slug: { $regex: `^${slug}`, $options: 'i' },
+    });
+    if (!province) {
+      throw new NotFoundException('Province not found');
+    }
+
+    const districts = await this.districtModel
+      .find({ provinceId: province._id })
+      .exec();
+    return districts.map((district) => ({
+      shortId: district.shortId,
+      fullName: district.fullName || '',
+    }));
+  }
+
+  async getCommunesByDistrict(slug: string): Promise<GetCommuneDto[]> {
+    const district = await this.districtModel.findOne({
+      slug: { $regex: `^${slug}`, $options: 'i' },
+    });
+    if (!district) {
+      throw new NotFoundException('District not found');
+    }
+
+    const communes = await this.communeModel
+      .find({ districtId: district._id })
+      .exec();
+    return communes.map((commune) => ({
+      shortId: commune.shortId,
+      fullName: commune.fullName || '',
+    }));
   }
 }

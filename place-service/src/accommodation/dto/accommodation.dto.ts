@@ -1,24 +1,21 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Accommodation } from '../schemas/accommodation.schema';
-
+import { LocationDto } from 'src/location/dto/location.dto';
 export class AccommodationDto {
+  @ApiProperty()
   shortId: string;
+
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   address: string;
+
+  @ApiProperty()
   extendedAddress: string;
-  location: {
-    commune: {
-      shortId: string;
-      fullName: string;
-      district: {
-        shortId: string;
-        fullName: string;
-        province: {
-          shortId: string;
-          fullName: string;
-        };
-      };
-    };
-  };
+
+  @ApiProperty({ type: () => LocationDto })
+  location: LocationDto;
 
   constructor(partial: Accommodation & { communeId: any }) {
     const commune = partial.communeId;

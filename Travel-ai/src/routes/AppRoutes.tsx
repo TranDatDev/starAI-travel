@@ -20,12 +20,12 @@ const AppRoutes = (props: Props) => {
                     <Route path="accommodation" element={<Accommodation />} />
                     <Route
                         path="accommodation/:id"
-                        element={<DetailInfo category="accommodation" />}
+                        element={<DetailInfo service="accommodation" />}
                     />
                     <Route path="attraction" element={<Attraction />} />
-                    <Route path="attraction/:id" element={<DetailInfo category="attraction" />} />
+                    <Route path="attraction/:id" element={<DetailInfo service="attraction" />} />
                     <Route path="restaurant" element={<Restaurant />} />
-                    <Route path="restaurant/:id" element={<DetailInfo category="restaurant" />} />
+                    <Route path="restaurant/:id" element={<DetailInfo service="restaurant" />} />
                 </Route>
                 {/* <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route index element={<Dashboard />} />

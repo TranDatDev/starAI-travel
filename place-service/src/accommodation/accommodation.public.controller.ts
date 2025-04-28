@@ -10,6 +10,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiOkResponse } from '@nestjs/swagger';
 import { AccommodationService } from './accommodation.service';
 import { Accommodation } from './schemas/accommodation.schema';
 import { AccommodationFilterDto } from './dto/accommodation-filter.dto';
@@ -19,19 +20,13 @@ import {
   ApiResponse,
   ApiQuery,
   ApiParam,
-  ApiConsumes,
-  ApiBody,
 } from '@nestjs/swagger';
-import { SupabaseService } from '../supabase/supabase.service';
 import { AccommodationDto } from './dto/accommodation.dto';
 
 @ApiTags('API công cộng: Cơ sở lưu trú')
 @Controller({ path: '/public/accommodation', version: '1' })
 export class AccommodationPublicController {
-  constructor(
-    private readonly accommodationService: AccommodationService,
-    private readonly supabaseService: SupabaseService,
-  ) {}
+  constructor(private readonly accommodationService: AccommodationService) {}
 
   @Get()
   @ApiOperation({ summary: 'Lấy danh sách các cơ sở lưu trú' })
@@ -72,6 +67,11 @@ export class AccommodationPublicController {
   }
 
   @Get('/with-location')
+  @ApiOperation({ summary: 'Lấy danh sách cơ sở lưu trú kèm địa chỉ đầy đủ' })
+  @ApiOkResponse({
+    description: 'Danh sách cơ sở lưu trú đầy đủ location',
+    type: [AccommodationDto],
+  })
   async findAllWithLocation(): Promise<AccommodationDto[]> {
     const accommodations =
       await this.accommodationService.findAllWithLocation();
@@ -99,62 +99,5 @@ export class AccommodationPublicController {
       );
     }
     return accommodation;
-  }
-
-  @Post(':shortId/upload-image')
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: 'Upload ảnh cho cơ sở lưu trú' })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Tải ảnh lên thành công, trả về URL',
-  })
-  @ApiResponse({ status: 400, description: 'File không hợp lệ' })
-  async uploadImage(
-    @Param('shortId') shortId: string,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    if (!file) {
-      throw new BadRequestException('Không có file nào được tải lên');
-    }
-
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!allowedTypes.includes(file.mimetype)) {
-      throw new BadRequestException('Định dạng ảnh không hợp lệ');
-    }
-
-    // Tạo tên file duy nhất
-    const fileName = `${shortId}/${Date.now()}-${file.originalname}`;
-
-    // Upload ảnh và lấy URL
-    const imageUrl = await this.supabaseService.processAndUploadImage(
-      file.buffer,
-      'accommodation-files',
-      fileName,
-    );
-
-    // Cập nhật URL ảnh vào cơ sở dữ liệu MongoDB
-    const updatedAccommodation =
-      await this.accommodationService.addImageToAccommodation(
-        shortId,
-        imageUrl,
-      );
-
-    return {
-      message: 'Ảnh đã được upload và lưu thành công',
-      imageUrl,
-      accommodation: updatedAccommodation,
-    };
   }
 }

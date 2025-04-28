@@ -26,8 +26,71 @@
         "next": "次へ"
     },
     "accommodation": {
+        "label": "宿泊施設",
         "title": "宿泊施設",
         "no-results": "宿泊施設が見つかりませんでした。",
         "has-results": "{{count}} 件の宿泊施設が見つかりました。"
+    },
+    "currency": {
+        "type": "JPY",
+        "exchange-rate": "0.0055",
+        "symbol": "¥"
+    },
+    "details": {
+        "info": {
+            "label": "情報",
+            "description": "詳細情報の説明",
+            "min-price": {
+                "label": "最低価格",
+                "description": "最も低い価格（VND換算）"
+            },
+            "max-price": {
+                "label": "最高価格",
+                "description": "最も高い価格（VND換算）"
+            },
+            "max-guests": {
+                "label": "最大宿泊人数",
+                "description": "宿泊可能な最大人数"
+            },
+            "max-rooms": {
+                "label": "最大部屋数",
+                "description": "提供可能な最大部屋数"
+            },
+            "email": {
+                "label": "メールアドレス",
+                "description": "メールアドレス"
+            },
+            "phone": {
+                "label": "電話番号",
+                "description": "電話番号（国際規格）"
+            }
+        },
+        "img": {
+            "label": "画像",
+            "description": "複数の画像を含む",
+            "expand": {
+                "label": "拡大画像"
+            }
+        },
+        "user-rating": {
+            "label": "ユーザー評価",
+            "description": "ユーザーによるレビューと評価"
+        },
+        "download": {
+            "label": "情報をダウンロード",
+            "description": "詳細情報をダウンロード"
+        },
+        "file-type-docx-download-label": "詳細"
+    },
+    "filter": {
+        "commune": {
+            "label": "区/町村を選択"
+        },
+        "district": {
+            "label": "区を選択"
+        },
+        "province": {
+            "label": "都道府県を選択"
+        }
     }
 }

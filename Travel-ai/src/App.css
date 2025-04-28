@@ -1,4 +1,4 @@
 #root {
     margin: 0 auto;
-    padding: 4rem 8rem;
+    padding: clamp(1rem, 2vw, 4rem) clamp(2rem, 4vw, 8rem);
 }

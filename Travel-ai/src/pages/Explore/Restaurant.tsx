@@ -1,12 +1,15 @@
 import GeneralList from '@/components/GeneralList';
-import { fetchRestaurants } from '@/services/general/restaurantService';
-
+import { useTranslation } from 'react-i18next';
+import AnimatedBox from '@/components/AnimatedBox';
 const RestaurantPage = () => {
+    const { t } = useTranslation();
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Danh sách Nhà Hàng</h2>
-            <GeneralList fetchData={fetchRestaurants} category="accommodation" />
-        </div>
+        <AnimatedBox>
+            <div className="py-6">
+                <h2 className="text-3xl font-bold mb-4 text-left">{t('restaurant.title')}</h2>
+                <GeneralList service="restaurant" />
+            </div>
+        </AnimatedBox>
     );
 };
 

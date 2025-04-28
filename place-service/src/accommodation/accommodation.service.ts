@@ -119,16 +119,83 @@ export class AccommodationService {
     return accommodation;
   }
 
-  async findByShortId(shortId: string): Promise<Accommodation> {
-    const accommodation = await this.accommodationModel
-      .findOne({ shortId })
+  async findByShortId(shortId: string): Promise<any> {
+    const result = await this.accommodationModel
+      .aggregate([
+        {
+          $match: { shortId },
+        },
+        {
+          $lookup: {
+            from: 'communes',
+            localField: 'communeId',
+            foreignField: 'shortId',
+            as: 'commune',
+          },
+        },
+        { $unwind: { path: '$commune', preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: 'districts',
+            localField: 'commune.districtId',
+            foreignField: '_id',
+            as: 'district',
+          },
+        },
+        { $unwind: { path: '$district', preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: 'provinces',
+            localField: 'district.provinceId',
+            foreignField: '_id',
+            as: 'province',
+          },
+        },
+        { $unwind: { path: '$province', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            name: 1,
+            description: 1,
+            category: 1,
+            minPrice: 1,
+            maxPrice: 1,
+            images: 1,
+            maxGuests: 1,
+            maxRooms: 1,
+            officialRating: 1,
+            userRating: 1,
+            reviewsCount: 1,
+            amenities: 1,
+            contactPhone: 1,
+            contactEmail: 1,
+            isAvailable: 1,
+            isFeatured: 1,
+            tags: 1,
+            policies: 1,
+            fullAddress: {
+              $concat: [
+                '$address',
+                ', ',
+                { $ifNull: ['$commune.fullName', ''] },
+                ', ',
+                { $ifNull: ['$district.fullName', ''] },
+                ', ',
+                { $ifNull: ['$province.fullName', ''] },
+              ],
+            },
+            _id: 0,
+          },
+        },
+      ])
       .exec();
-    if (!accommodation) {
+
+    if (!result || result.length === 0) {
       throw new NotFoundException(
         `Accommodation with shortId ${shortId} not found`,
       );
     }
-    return accommodation;
+
+    return result[0];
   }
 
   async update(
@@ -151,11 +218,17 @@ export class AccommodationService {
     }
   }
 
+  async findByShortIdForUpdate(
+    shortId: string,
+  ): Promise<AccommodationDocument | null> {
+    return this.accommodationModel.findOne({ shortId });
+  }
+
   async addImageToAccommodation(
     shortId: string,
     imageUrl: string,
   ): Promise<Accommodation> {
-    const accommodation = await this.findByShortId(shortId);
+    const accommodation = await this.findByShortIdForUpdate(shortId);
     if (!accommodation) {
       throw new NotFoundException(
         `Accommodation with shortId ${shortId} not found`,

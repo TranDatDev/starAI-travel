@@ -1,21 +1,28 @@
 import axios, { AxiosInstance } from 'axios';
 
 export const accommodationApi = axios.create({
-    baseURL: import.meta.env.VITE_ACCOMMODATION_API_URL,
+    baseURL: import.meta.env.VITE_PUBLIC_SERVICE_API_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 export const restaurantApi = axios.create({
-    baseURL: import.meta.env.RESTAURANT_API_URL,
+    baseURL: import.meta.env.VITE_PUBLIC_SERVICE_API_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 export const attractionApi = axios.create({
-    baseURL: import.meta.env.ATTRACTION_API_URL,
+    baseURL: import.meta.env.VITE_PUBLIC_SERVICE_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+export const locationApi = axios.create({
+    baseURL: import.meta.env.VITE_PUBLIC_SERVICE_API_URL,
     headers: {
         'Content-Type': 'application/json',
     },

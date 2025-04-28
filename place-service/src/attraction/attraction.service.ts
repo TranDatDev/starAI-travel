@@ -143,11 +143,17 @@ export class AttractionService {
     }
   }
 
+  async findByShortIdForUpdate(
+    shortId: string,
+  ): Promise<AttractionDocument | null> {
+    return this.attractionModel.findOne({ shortId });
+  }
+
   async addImageToAttraction(
     shortId: string,
     imageUrl: string,
   ): Promise<Attraction> {
-    const attraction = await this.findByShortId(shortId);
+    const attraction = await this.findByShortIdForUpdate(shortId);
     if (!attraction) {
       throw new NotFoundException(
         `Attraction with shortId ${shortId} not found`,

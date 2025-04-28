@@ -8,18 +8,34 @@ import {
   Patch,
   NotFoundException,
   Query,
+  UploadedFile,
+  UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiConsumes,
+  ApiBody,
+} from '@nestjs/swagger';
+import { SupabaseService } from '../supabase/supabase.service';
+import { generateSlug } from 'src/utils/slug.util';
+import * as path from 'path';
 import { AttractionService } from './attraction.service';
 import { Attraction } from './schemas/attraction.schema';
 import { AttractionFilterDto } from './dto/attraction-filter.dto';
 import { CreateAttractionDto } from './dto/create-attraction.dto';
 import { UpdateAttractionDto } from './dto/update-attraction.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-
 @ApiTags('API nội bộ: Điểm du lịch')
 @Controller({ path: '/private/attraction', version: '1' })
 export class AttractionPrivateController {
-  constructor(private readonly attractionService: AttractionService) {}
+  constructor(
+    private readonly attractionService: AttractionService,
+    private readonly supabaseService: SupabaseService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Tạo mới một điểm du lịch' })
@@ -97,5 +113,62 @@ export class AttractionPrivateController {
   async remove(@Param('id') id: string): Promise<{ message: string }> {
     await this.attractionService.remove(id);
     return { message: `Attraction with ID ${id} has been deleted` };
+  }
+  @Post(':shortId/upload-image')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Upload ảnh cho điểm du lịch' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Tải ảnh lên thành công, trả về URL',
+  })
+  @ApiResponse({ status: 400, description: 'File không hợp lệ' })
+  async uploadImage(
+    @Param('shortId') shortId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Không có file nào được tải lên');
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Định dạng ảnh không hợp lệ');
+    }
+
+    // Tạo tên file duy nhất
+    const originalName = file.originalname;
+    const baseName = path.basename(originalName, path.extname(originalName));
+    const slugName = generateSlug(baseName);
+    const fileName = `${shortId}/${Date.now()}-${slugName}.webp`;
+    // Upload ảnh và lấy URL
+    const imageUrl = await this.supabaseService.processAndUploadImage(
+      file.buffer,
+      'attraction-files',
+      fileName,
+    );
+
+    // Cập nhật URL ảnh vào cơ sở dữ liệu MongoDB
+    const updatedAttraction = await this.attractionService.addImageToAttraction(
+      shortId,
+      imageUrl,
+    );
+
+    return {
+      message: 'Ảnh đã được upload và lưu thành công',
+      imageUrl,
+      attraction: updatedAttraction,
+    };
   }
 }

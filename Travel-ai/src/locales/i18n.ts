@@ -9,16 +9,14 @@ export const languages = [
     { code: 'zh', label: '中文' },
 ];
 
-async function loadResources() {
+export async function initI18n() {
     const resources: Record<string, any> = {};
     for (const lang of languages) {
         const translation = await import(`./lang/${lang.code}.json`);
         resources[lang.code] = { translation: translation.default };
     }
-    return resources;
-}
-loadResources().then((resources) => {
-    i18n.use(initReactI18next).init({
+
+    await i18n.use(initReactI18next).init({
         resources,
         lng: 'vi',
         fallbackLng: 'en',
@@ -26,5 +24,8 @@ loadResources().then((resources) => {
             escapeValue: false,
         },
     });
-});
+
+    return i18n;
+}
+
 export default i18n;

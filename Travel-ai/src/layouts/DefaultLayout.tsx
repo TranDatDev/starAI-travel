@@ -1,63 +1,23 @@
 import React from 'react';
-
 interface Props {}
-import { Outlet, Link } from 'react-router';
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
-import { useTranslation } from 'react-i18next';
+import { Outlet } from 'react-router';
 import AnimatedBox from '@/components/AnimatedBox';
+import NavigationAuthService from '@/components/NavigationAuthService';
+import NavigationGeneralService from '@/components/NavigationGeneralService';
+import RightSideBarToggle from '@/components/RightSideBarToggle';
 const DefaultLayout = (props: Props) => {
-    const { t } = useTranslation();
-    const menuItems = ['', 'accommodation', 'attraction', 'restaurant'];
     return (
         <AnimatedBox>
-            <div>
-                <header className="mt-2 mb-10 flex items-center justify-between">
+            <div className="mb-10">
+                <header className="sticky top-0 bg-[var(--background)] py-4 mb-4 flex items-center justify-between z-50 ">
                     <h1 className="font-bold text-4xl">STARAI</h1>
-                    <NavigationMenu>
-                        <NavigationMenuList>
-                            {menuItems.map((item) => {
-                                const path = item ? `/${item}` : '/';
-                                const labelKey = `link.${item || 'home'}`;
-
-                                return (
-                                    <NavigationMenuItem key={path}>
-                                        <NavigationMenuLink
-                                            asChild
-                                            className={navigationMenuTriggerStyle()}
-                                        >
-                                            <Link to={path}>{t(labelKey)}</Link>
-                                        </NavigationMenuLink>
-                                    </NavigationMenuItem>
-                                );
-                            })}
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                    <NavigationMenu>
-                        <NavigationMenuList>
-                            <NavigationMenuItem>
-                                <NavigationMenuLink
-                                    asChild
-                                    className={navigationMenuTriggerStyle()}
-                                >
-                                    <Link to="/login">{t('link.login')}</Link>
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
-                            <NavigationMenuItem>
-                                <NavigationMenuLink
-                                    asChild
-                                    className={navigationMenuTriggerStyle()}
-                                >
-                                    <Link to="/register">{t('link.register')}</Link>
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
-                        </NavigationMenuList>
-                    </NavigationMenu>
+                    <RightSideBarToggle />
+                    <div className="hidden lg:block">
+                        <NavigationGeneralService />
+                    </div>
+                    <div className="hidden lg:block">
+                        <NavigationAuthService />
+                    </div>
                 </header>
                 <main>
                     {' '}
