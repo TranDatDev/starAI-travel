@@ -1,0 +1,95 @@
+{
+    "language": "Tiếng Việt",
+    "change-language-noti": "Ngôn ngữ của bạn đã được chuyển sang Tiếng Việt",
+    "welcome": "Chào mừng bạn đến với Star AI, một dự án du lịch tích hợp AI",
+    "theme": {
+        "light": "Sáng",
+        "dark": "Tối",
+        "system": "Hệ Thống"
+    },
+    "home": {
+        "welcome-title": {
+            "small": "Chào mừng đến với",
+            "big": "dự án du lịch tích hợp AI"
+        }
+    },
+    "link": {
+        "home": "Trang chủ",
+        "login": "Đăng nhập",
+        "register": "Đăng ký",
+        "accommodation": "Cơ sở lưu trú",
+        "attraction": "Địa điểm du lịch",
+        "restaurant": "Nhà hàng"
+    },
+    "pagination": {
+        "previous": "Trước",
+        "next": "Sau"
+    },
+    "accommodation": {
+        "title": "Cơ sở lưu trú",
+        "no-results": "Không tìm thấy cơ sở lưu trú.",
+        "has-results": "Đã tìm thấy {{count}} cơ sở lưu trú."
+    },
+    "currency": {
+        "type": "VND",
+        "exchange-rate": "1",
+        "symbol": "₫"
+    },
+    "details": {
+        "info": {
+            "label": "Thông tin",
+            "description": "Mô tả thông tin chi tiết",
+            "min-price": {
+                "label": "Giá thấp nhất",
+                "description": "Giá tiền thấp nhất (được quy đổi theo tỷ giá vnđ)"
+            },
+            "max-price": {
+                "label": "Giá cao nhất",
+                "description": "Giá tiền cao nhất (được quy đổi theo tỷ giá vnđ)"
+            },
+            "max-guests": {
+                "label": "Số lượng khách tối đa",
+                "description": "Số lượng khách tối đa có thể chứa"
+            },
+            "max-rooms": {
+                "label": "Số lượng phòng tối đa",
+                "description": "Số lượng phòng tối đa có thể thuê"
+            },
+            "email": {
+                "label": "Email",
+                "description": "Địa chỉ email"
+            },
+            "phone": {
+                "label": "Điện thoại",
+                "description": "Số điện thoại (Quy chuẩn quốc tế)"
+            }
+        },
+        "img": {
+            "label": "Hình ảnh",
+            "description": "Bao gồm nhiều hình ảnh",
+            "expand": {
+                "label": "Ảnh Mở Rộng"
+            }
+        },
+        "user-rating": {
+            "label": "Đánh giá của người dùng",
+            "description": "Đánh giá của người dùng"
+        },
+        "download": {
+            "label": "Tải thông tin",
+            "description": "Tải thông tin chi tiết"
+        },
+        "file-type-docx-download-label": "chi tiết"
+    },
+    "filter": {
+        "commune": {
+            "label": "Chọn Phường/Xã"
+        },
+        "district": {
+            "label": "Chọn Quận/Huyện"
+        },
+        "province": {
+            "label": "Chọn Tỉnh/Thành phố"
+        }
+    }
+}
