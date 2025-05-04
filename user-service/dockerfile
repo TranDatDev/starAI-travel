@@ -1,0 +1,33 @@
+# Stage 1: Build NestJS app
+FROM node:18-alpine AS builder
+WORKDIR /app
+
+# Cài các dependencies trước
+COPY package*.json ./
+RUN npm ci
+
+# Copy toàn bộ source code
+COPY . .
+
+# Đảm bảo quyền thực thi cho binary (nest, v.v.)
+RUN chmod +x node_modules/.bin/*
+
+# Build NestJS
+RUN npm run build
+
+# Stage 2: Tạo image để chạy app
+FROM node:18-alpine
+WORKDIR /app
+
+# Copy dist từ builder
+COPY --from=builder /app/dist ./dist
+COPY package*.json ./
+
+# Cài dependencies chạy thôi, không cần dev
+RUN npm ci --omit=dev
+
+# Expose port NestJS
+EXPOSE 3002
+
+# Lệnh chạy app
+CMD ["node", "dist/main"]
