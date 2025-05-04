@@ -10,10 +10,12 @@ export const fetchAccommodations = async (page: number, limit: number) => {
 
 export const fetchAccommodationsByFilter = async (filters: AccommodationFilter) => {
     try {
+        console.log('Fetching accommodations with filters:', filters);
         const response = await accommodationApi.get('/accommodation', {
             params: filters,
         });
-        console.log('Filtered accommodation response:', response.data);
+        console.log('Accommodation response:', response);
+        console.log('Filtered accommodation response data:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching accommodations with filters:', error);

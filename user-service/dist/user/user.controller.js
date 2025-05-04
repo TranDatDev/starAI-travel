@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var UserController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
@@ -18,24 +19,34 @@ const user_service_1 = require("./user.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
 const swagger_1 = require("@nestjs/swagger");
-let UserController = class UserController {
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const use_guards_decorator_1 = require("@nestjs/common/decorators/core/use-guards.decorator");
+const role_guard_1 = require("../auth/role.guard");
+const role_decorator_1 = require("../auth/role.decorator");
+let UserController = UserController_1 = class UserController {
     userService;
+    logger = new common_1.Logger(UserController_1.name);
     constructor(userService) {
         this.userService = userService;
     }
     create(dto) {
+        this.logger.log(`Creating user with email: ${dto.email}`);
         return this.userService.create(dto);
     }
     findAll() {
+        this.logger.log('Fetching all users');
         return this.userService.findAll();
     }
     findOne(id) {
+        this.logger.log(`Fetching user with ID: ${id}`);
         return this.userService.findOne(id);
     }
     update(id, dto) {
+        this.logger.log(`Updating user ${id}`);
         return this.userService.update(id, dto);
     }
     remove(id) {
+        this.logger.warn(`Deleting user ${id}`);
         return this.userService.remove(id);
     }
 };
@@ -50,6 +61,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "create", null);
 __decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard),
+    (0, role_decorator_1.Roles)('MANAGER', 'ADMIN'),
     (0, common_1.Get)(),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all users.' }),
     __metadata("design:type", Function),
@@ -57,6 +70,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "findAll", null);
 __decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, description: 'User ID' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'User found.' }),
@@ -67,6 +81,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "findOne", null);
 __decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Patch)(':id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, description: 'User ID' }),
     (0, swagger_1.ApiBody)({ type: update_user_dto_1.UpdateUserDto }),
@@ -79,6 +94,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "update", null);
 __decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Delete)(':id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, description: 'User ID' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'User deleted successfully.' }),
@@ -88,7 +104,7 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "remove", null);
-exports.UserController = UserController = __decorate([
+exports.UserController = UserController = UserController_1 = __decorate([
     (0, swagger_1.ApiTags)('user'),
     (0, common_1.Controller)({ path: '/user', version: '1' }),
     __metadata("design:paramtypes", [user_service_1.UserService])

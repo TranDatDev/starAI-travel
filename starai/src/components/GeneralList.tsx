@@ -20,14 +20,13 @@ import { Input } from './ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
 import { fetchProvinces, fetchDistricts, fetchCommunes } from '@/services/general/locationService';
 import { generateSlug } from '@/utils/slug';
-
-// ✨ new code: import các service fetch
 import {
     fetchAccommodations,
     fetchAccommodationsByFilter,
 } from '@/services/general/accommodationService';
 import { fetchRestaurants, fetchRestaurantsByFilter } from '@/services/general/restaurantService';
 import { fetchAttractions, fetchAttractionsByFilter } from '@/services/general/attractionService';
+
 const fetchFunctions: Record<
     string,
     {
@@ -63,23 +62,26 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const page = Number(searchParams.get('page')) || 1;
     const limit = 10;
-    const [isTwoColumns, setIsTwoColumns] = useState<boolean>(false);
+
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // --- Filter states ---
     const [provinces, setProvinces] = useState<LocationOption[]>([]);
     const [districts, setDistricts] = useState<LocationOption[]>([]);
     const [communes, setCommunes] = useState<LocationOption[]>([]);
-    const [selectedProvince, setSelectedProvince] = useState<string>('');
-    const [selectedDistrict, setSelectedDistrict] = useState<string>('');
-    const [selectedCommune, setSelectedCommune] = useState<string>('');
-    const [search, setSearch] = useState<string>('');
-    const [appliedFilters, setAppliedFilters] = useState<any>({
-        communeId: '',
-        search: '',
-    });
+
+    const [search, setSearch] = useState(searchParams.get('search') || '');
+    const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
+    const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
+    const [selectedProvince, setSelectedProvince] = useState(searchParams.get('province') || '');
+    const [selectedDistrict, setSelectedDistrict] = useState(searchParams.get('district') || '');
+    const [selectedCommune, setSelectedCommune] = useState(searchParams.get('commune') || '');
+    const [isFeatured, setIsFeatured] = useState(searchParams.get('isFeatured') === 'true');
+    const [isAvailable, setIsAvailable] = useState(searchParams.get('isAvailable') === 'true');
+    const [isTwoColumns, setIsTwoColumns] = useState(false);
+
+    const [appliedFilters, setAppliedFilters] = useState<any>({});
 
     useEffect(() => {
         const loadProvinces = async () => {
@@ -107,11 +109,6 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                 setSelectedCommune('');
             };
             loadDistricts();
-        } else {
-            setDistricts([]);
-            setSelectedDistrict('');
-            setCommunes([]);
-            setSelectedCommune('');
         }
     }, [selectedProvince]);
 
@@ -127,20 +124,22 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                 setSelectedCommune('');
             };
             loadCommunes();
-        } else {
-            setCommunes([]);
-            setSelectedCommune('');
         }
     }, [selectedDistrict]);
 
-    // --- Fetch data ---
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
                 const filters = {
-                    communeId: appliedFilters.commune || undefined,
-                    search: generateSlug(appliedFilters.search) || undefined,
+                    provinceSlug: selectedProvince || undefined,
+                    districtSlug: selectedDistrict || undefined,
+                    communeId: selectedCommune || undefined,
+                    search: search ? generateSlug(search) : undefined,
+                    isFeatured: isFeatured || undefined,
+                    isAvailable: isAvailable || undefined,
+                    minPrice: minPrice ? parseInt(minPrice) : undefined,
+                    maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
                     page,
                     limit,
                 };
@@ -148,14 +147,10 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                 const fetcher = fetchFunctions[service];
                 if (!fetcher) throw new Error(`No fetch function for service: ${service}`);
 
-                let response;
-                const hasFilter = filters.communeId || filters.search;
-
-                if (hasFilter) {
-                    response = await fetcher.filter(filters);
-                } else {
-                    response = await fetcher.normal(page, limit);
-                }
+                const hasFilter = Object.values(filters).some((v) => v !== undefined);
+                const response = hasFilter
+                    ? await fetcher.filter(filters)
+                    : await fetcher.normal(page, limit);
 
                 setData(response);
                 setError(null);
@@ -167,90 +162,148 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
         };
 
         fetchData();
-    }, [page, limit, appliedFilters, service]);
+    }, [page, appliedFilters, service]);
+
+    const updateURLParams = (params: Record<string, any>) => {
+        const newParams = new URLSearchParams(searchParams);
+        Object.entries(params).forEach(([key, value]) => {
+            if (value === '' || value === undefined || value === false) {
+                newParams.delete(key);
+            } else {
+                newParams.set(key, String(value));
+            }
+        });
+        setSearchParams(newParams);
+    };
 
     const handlePageChange = (newPage: number) => {
-        setSearchParams({ page: String(newPage) }, { replace: true });
+        updateURLParams({ page: newPage });
     };
 
     const handleSearch = () => {
         setAppliedFilters({
-            commune: selectedCommune,
-            search: search,
+            provinceSlug: selectedProvince,
+            districtSlug: selectedDistrict,
+            communeId: selectedCommune,
+            search,
+            isFeatured,
+            isAvailable,
+            minPrice,
+            maxPrice,
         });
-        handlePageChange(1);
+
+        updateURLParams({
+            page: 1,
+            search,
+            minPrice,
+            maxPrice,
+            provinceSlug: selectedProvince,
+            districtSlug: selectedDistrict,
+            commune: selectedCommune,
+            isFeatured,
+            isAvailable,
+        });
     };
+
+    const totalPages = data?.total && data?.limit ? Math.ceil(data.total / data.limit) : 1;
+    const total = data?.total || 0;
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
-
-    const totalPages = data?.totalPages || 1;
-    const total = data?.total || null;
-
     return (
         <AnimatedBox>
-            {/* --- Filters --- */}
-            <div className="flex gap-4 mb-6">
+            {/* Filters */}
+            <div className="flex flex-col lg:flex-row flex-wrap gap-4 mb-6">
                 <Input
                     placeholder="Tìm kiếm từ khóa..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-
+                <Input
+                    placeholder="Min price"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                />
+                <Input
+                    placeholder="Max price"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                />
                 <Select
                     value={selectedProvince}
-                    onValueChange={(value) => setSelectedProvince(generateSlug(value))}
+                    onValueChange={(v) => setSelectedProvince(generateSlug(v))}
                 >
                     <SelectTrigger>
-                        <SelectValue placeholder={t('filter.province.label')} />
+                        <SelectValue placeholder="Tỉnh/Thành" />
                     </SelectTrigger>
                     <SelectContent>
-                        {provinces.map((province) => (
-                            <SelectItem key={province.shortId} value={province.shortId}>
-                                {province.fullName}
+                        {provinces.map((p) => (
+                            <SelectItem key={p.shortId} value={p.shortId}>
+                                {p.fullName}
                             </SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
-
                 <Select
                     value={selectedDistrict}
-                    onValueChange={(value) => setSelectedDistrict(generateSlug(value))}
+                    onValueChange={(v) => setSelectedDistrict(generateSlug(v))}
                     disabled={!districts.length}
                 >
                     <SelectTrigger>
-                        <SelectValue placeholder={t('filter.district.label')} />
+                        <SelectValue placeholder="Quận/Huyện" />
                     </SelectTrigger>
                     <SelectContent>
-                        {districts.map((district) => (
-                            <SelectItem key={district.shortId} value={district.shortId}>
-                                {district.fullName}
+                        {districts.map((d) => (
+                            <SelectItem key={d.shortId} value={d.shortId}>
+                                {d.fullName}
                             </SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
-
                 <Select
                     value={selectedCommune}
-                    onValueChange={(value) => setSelectedCommune(value)}
+                    onValueChange={setSelectedCommune}
                     disabled={!communes.length}
                 >
                     <SelectTrigger>
-                        <SelectValue placeholder={t('filter.commune.label')} />
+                        <SelectValue placeholder="Phường/Xã" />
                     </SelectTrigger>
                     <SelectContent>
-                        {communes.map((commune) => (
-                            <SelectItem key={commune.shortId} value={commune.shortId}>
-                                {commune.fullName}
+                        {communes.map((c) => (
+                            <SelectItem key={c.shortId} value={c.shortId}>
+                                {c.fullName}
                             </SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
+                <div className="flex flex-col gap-4 lg:flex-row">
+                    {/* isFeatured Filter */}
+                    <div className="flex items-center">
+                        <input
+                            type="checkbox"
+                            checked={isFeatured}
+                            onChange={(e) => setIsFeatured(e.target.checked)}
+                            id="isFeatured"
+                            className="mr-2"
+                        />
+                        <label htmlFor="isFeatured">{t('filter.isFeatured')}</label>
+                    </div>
 
+                    {/* isAvailable Filter */}
+                    <div className="flex items-center">
+                        <input
+                            type="checkbox"
+                            checked={isAvailable}
+                            onChange={(e) => setIsAvailable(e.target.checked)}
+                            id="isAvailable"
+                            className="mr-2"
+                        />
+                        <label htmlFor="isAvailable">{t('filter.isAvailable')}</label>
+                    </div>
+                </div>
                 <Button onClick={handleSearch}>Tìm kiếm</Button>
             </div>
 
-            {/* --- Result --- */}
             {total !== null && (
                 <p className="text-lg mb-4 text-left">
                     {total > 0
@@ -258,68 +311,53 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                         : t('accommodation.no-results')}
                 </p>
             )}
+
             <div className="space-y-4">
-                {/* --- View switch --- */}
                 <div className="flex gap-2">
                     <Button
                         onClick={() => setIsTwoColumns(false)}
-                        className={`p-2 flex items-center gap-2 rounded transition ${
-                            !isTwoColumns ? 'bg-blue-600' : ''
-                        }`}
+                        className={!isTwoColumns ? 'bg-blue-600' : ''}
                     >
-                        <Icon icon="mdi:view-agenda" className="text-lg" />
+                        <Icon icon="mdi:view-agenda" />
                     </Button>
-
                     <Button
                         onClick={() => setIsTwoColumns(true)}
-                        className={`p-2 flex items-center gap-2 rounded transition ${
-                            isTwoColumns ? 'bg-yellow-500' : ''
-                        }`}
+                        className={isTwoColumns ? 'bg-yellow-500' : ''}
                     >
-                        <Icon icon="mdi:view-grid" className="text-lg" />
+                        <Icon icon="mdi:view-grid" />
                     </Button>
                 </div>
 
-                {/* --- Pagination Top --- */}
                 <Pagination>
                     <PaginationContent>
                         <PaginationItem>
                             <PaginationPrevious
-                                label={t('pagination.previous')}
                                 onClick={() => handlePageChange(Math.max(page - 1, 1))}
                             />
                         </PaginationItem>
-
-                        {[...Array(totalPages)].map((_, i) => {
-                            const pageNumber = i + 1;
-                            return (
-                                <PaginationItem key={pageNumber}>
-                                    <PaginationLink
-                                        isActive={page === pageNumber}
-                                        onClick={() => handlePageChange(pageNumber)}
-                                    >
-                                        {pageNumber}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            );
-                        })}
-
+                        {[...Array(totalPages)].map((_, i) => (
+                            <PaginationItem key={i}>
+                                <PaginationLink
+                                    isActive={page === i + 1}
+                                    onClick={() => handlePageChange(i + 1)}
+                                >
+                                    {i + 1}
+                                </PaginationLink>
+                            </PaginationItem>
+                        ))}
                         {totalPages > 5 && page < totalPages - 2 && (
                             <PaginationItem>
                                 <PaginationEllipsis />
                             </PaginationItem>
                         )}
-
                         <PaginationItem>
                             <PaginationNext
-                                label={t('pagination.next')}
                                 onClick={() => handlePageChange(Math.min(page + 1, totalPages))}
                             />
                         </PaginationItem>
                     </PaginationContent>
                 </Pagination>
 
-                {/* --- List --- */}
                 <div className={`grid ${isTwoColumns ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
                     {data?.data?.map((item: any) => (
                         <Link to={`/${service}/${item.shortId}`} key={item.shortId}>
@@ -339,39 +377,30 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                     ))}
                 </div>
 
-                {/* --- Pagination Bottom --- */}
                 <Pagination>
                     <PaginationContent>
                         <PaginationItem>
                             <PaginationPrevious
-                                label={t('pagination.previous')}
                                 onClick={() => handlePageChange(Math.max(page - 1, 1))}
                             />
                         </PaginationItem>
-
-                        {[...Array(totalPages)].map((_, i) => {
-                            const pageNumber = i + 1;
-                            return (
-                                <PaginationItem key={pageNumber}>
-                                    <PaginationLink
-                                        isActive={page === pageNumber}
-                                        onClick={() => handlePageChange(pageNumber)}
-                                    >
-                                        {pageNumber}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            );
-                        })}
-
+                        {[...Array(totalPages)].map((_, i) => (
+                            <PaginationItem key={i}>
+                                <PaginationLink
+                                    isActive={page === i + 1}
+                                    onClick={() => handlePageChange(i + 1)}
+                                >
+                                    {i + 1}
+                                </PaginationLink>
+                            </PaginationItem>
+                        ))}
                         {totalPages > 5 && page < totalPages - 2 && (
                             <PaginationItem>
                                 <PaginationEllipsis />
                             </PaginationItem>
                         )}
-
                         <PaginationItem>
                             <PaginationNext
-                                label={t('pagination.next')}
                                 onClick={() => handlePageChange(Math.min(page + 1, totalPages))}
                             />
                         </PaginationItem>

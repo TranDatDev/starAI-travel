@@ -72,16 +72,25 @@ export function buildLocationAggregation({
     const locationMatch: Record<string, any> = {};
 
     if (communeId) locationMatch['commune.shortId'] = communeId;
-    else if (communeSlug) locationMatch['commune.slug'] = communeSlug;
+    else if (communeSlug)
+      locationMatch['commune.slug'] = { $regex: communeSlug, $options: 'i' };
 
     if (!communeId) {
       if (districtId) locationMatch['district.shortId'] = districtId;
-      else if (districtSlug) locationMatch['district.slug'] = districtSlug;
+      else if (districtSlug)
+        locationMatch['district.slug'] = {
+          $regex: districtSlug,
+          $options: 'i',
+        };
     }
 
     if (!communeId && !districtId) {
       if (provinceId) locationMatch['province.shortId'] = provinceId;
-      else if (provinceSlug) locationMatch['province.slug'] = provinceSlug;
+      else if (provinceSlug)
+        locationMatch['province.slug'] = {
+          $regex: provinceSlug,
+          $options: 'i',
+        };
     }
 
     if (Object.keys(locationMatch).length > 0) {

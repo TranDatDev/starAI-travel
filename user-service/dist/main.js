@@ -6,7 +6,9 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const process = require("process");
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const app = await core_1.NestFactory.create(app_module_1.AppModule, {
+        logger: ['log', 'error', 'warn', 'debug'],
+    });
     const config = new swagger_1.DocumentBuilder()
         .setTitle('User API')
         .setDescription('API quản lý người dùng')

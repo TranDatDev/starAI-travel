@@ -6,7 +6,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as process from 'process';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'error', 'warn', 'debug'],
+  });
 
   // Swagger cấu hình
   const config = new DocumentBuilder()

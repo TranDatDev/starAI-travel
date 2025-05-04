@@ -5,7 +5,7 @@ import {
   IsBoolean,
   IsEnum,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 
 export class AccommodationFilterDto {
   @IsOptional()
@@ -47,10 +47,12 @@ export class AccommodationFilterDto {
   maxPrice?: number;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   isAvailable?: boolean;
 
   @IsOptional()
+  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   isFeatured?: boolean;
 

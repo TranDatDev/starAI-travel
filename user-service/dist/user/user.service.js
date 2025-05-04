@@ -13,34 +13,65 @@ exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const nanoid_1 = require("nanoid");
+const bcrypt = require("bcrypt");
 let UserService = class UserService {
     prisma;
     constructor(prisma) {
         this.prisma = prisma;
     }
-    create(createUserDto) {
+    async create(createUserDto) {
         const id = (0, nanoid_1.nanoid)(8);
+        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
         return this.prisma.user.create({
             data: {
                 id,
-                ...createUserDto,
+                email: createUserDto.email,
+                password: hashedPassword,
             },
         });
     }
     findAll() {
-        return this.prisma.user.findMany();
+        return this.prisma.user.findMany({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            },
+        });
     }
     findOne(id) {
-        return this.prisma.user.findUnique({ where: { id } });
+        return this.prisma.user.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            },
+        });
     }
-    update(id, dto) {
+    async update(id, dto) {
+        let data = { ...dto };
+        if (dto.password) {
+            data.password = await bcrypt.hash(dto.password, 10);
+        }
         return this.prisma.user.update({
             where: { id },
-            data: dto,
+            data,
         });
     }
     remove(id) {
         return this.prisma.user.delete({ where: { id } });
+    }
+    async findByEmail(email) {
+        return this.prisma.user.findUnique({
+            where: { email },
+            select: {
+                id: true,
+                email: true,
+                password: true,
+                role: true,
+            },
+        });
     }
 };
 exports.UserService = UserService;
