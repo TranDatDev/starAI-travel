@@ -55,8 +55,8 @@ export class RestaurantPrivateController {
     description: 'Danh sách nhà hàng',
     type: [Restaurant],
   })
-  async findAll(@Query() filterDto: RestaurantFilterDto) {
-    return this.restaurantService.findAll(filterDto);
+  async findAllByAdmin(@Query() filterDto: RestaurantFilterDto) {
+    return this.restaurantService.findAllByAdmin(filterDto);
   }
 
   @Get(':id')
@@ -110,9 +110,14 @@ export class RestaurantPrivateController {
     description: 'Xoá thành công',
   })
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{ message: string }> {
-    await this.restaurantService.remove(id);
-    return { message: `Restaurant with ID ${id} has been deleted` };
+  async remove(
+    @Param('id') id: string,
+    @Query('type') type: 'soft' | 'hard',
+  ): Promise<{ message: string }> {
+    await this.restaurantService.remove(id, type);
+    return {
+      message: `Restaurant with ID ${id} has been deleted (${type})`,
+    };
   }
 
   @Post(':shortId/upload-image')

@@ -55,8 +55,8 @@ export class AttractionPrivateController {
     description: 'Danh sách điểm du lịch',
     type: [Attraction],
   })
-  async findAll(@Query() filterDto: AttractionFilterDto) {
-    return this.attractionService.findAll(filterDto);
+  async findAllByAdmin(@Query() filterDto: AttractionFilterDto) {
+    return this.attractionService.findAllByAdmin(filterDto);
   }
 
   @Get(':id')
@@ -99,10 +99,10 @@ export class AttractionPrivateController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Xoá một điểm du lịch theo ID' })
+  @ApiOperation({ summary: 'Xoá một địa điểm du lịch theo ID' })
   @ApiParam({
     name: 'id',
-    description: 'ID của điểm du lịch cần xoá',
+    description: 'ID của địa điểm du lịch cần xoá',
     example: 'bed1a8e3-c25a-4878-9d69-79081180def9',
   })
   @ApiResponse({
@@ -110,10 +110,16 @@ export class AttractionPrivateController {
     description: 'Xoá thành công',
   })
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{ message: string }> {
-    await this.attractionService.remove(id);
-    return { message: `Attraction with ID ${id} has been deleted` };
+  async remove(
+    @Param('id') id: string,
+    @Query('type') type: 'soft' | 'hard',
+  ): Promise<{ message: string }> {
+    await this.attractionService.remove(id, type);
+    return {
+      message: `Attraction with ID ${id} has been deleted (${type})`,
+    };
   }
+
   @Post(':shortId/upload-image')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload ảnh cho điểm du lịch' })

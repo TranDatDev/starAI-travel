@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const nanoid_1 = require("nanoid");
 const bcrypt = require("bcrypt");
+const exceptions_1 = require("@nestjs/common/exceptions");
 let UserService = class UserService {
     prisma;
     constructor(prisma) {
@@ -21,12 +22,25 @@ let UserService = class UserService {
     }
     async create(createUserDto) {
         const id = (0, nanoid_1.nanoid)(8);
+        const profileId = (0, nanoid_1.nanoid)(8);
         const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
         return this.prisma.user.create({
             data: {
                 id,
                 email: createUserDto.email,
                 password: hashedPassword,
+                profile: {
+                    create: {
+                        id: profileId,
+                        bio: '',
+                        birthday: null,
+                        gender: '',
+                        location: '',
+                    },
+                },
+            },
+            include: {
+                profile: true,
             },
         });
     }
@@ -46,6 +60,20 @@ let UserService = class UserService {
                 id: true,
                 name: true,
                 email: true,
+            },
+        });
+    }
+    getUserInfoById(id) {
+        return this.prisma.user.findUnique({
+            where: { id },
+            select: {
+                name: true,
+                email: true,
+                phoneNumber: true,
+                avatar: true,
+                language: true,
+                theme: true,
+                profile: true,
             },
         });
     }
@@ -72,6 +100,56 @@ let UserService = class UserService {
                 role: true,
             },
         });
+    }
+    async getAllRequestPartnerFromUserByManager(status) {
+        return this.prisma.partnerInfo.findMany({
+            where: { status: status },
+            select: {
+                id: true,
+                userId: true,
+                organization: true,
+                licenseNumber: true,
+                status: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
+    }
+    async getSpecificRequestPartnerFromUserByManager(userId) {
+        return this.prisma.partnerInfo.findMany({
+            where: { userId },
+            select: {
+                id: true,
+                userId: true,
+                organization: true,
+                licenseNumber: true,
+                status: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
+    }
+    async requestPartnerRole(userId, organization, licenseNumber) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            include: { partnerInfo: true },
+        });
+        if (!user)
+            throw new Error('User not found');
+        if (user.role !== 'USER')
+            throw new exceptions_1.HttpException('Only regular users can request partner role', 403);
+        if (user.partnerInfo)
+            throw new exceptions_1.BadRequestException('You have already requested partner role');
+        await this.prisma.partnerInfo.create({
+            data: {
+                id: (0, nanoid_1.nanoid)(8),
+                userId,
+                organization,
+                licenseNumber,
+                status: 'PENDING',
+            },
+        });
+        return { message: 'Partner request submitted' };
     }
 };
 exports.UserService = UserService;

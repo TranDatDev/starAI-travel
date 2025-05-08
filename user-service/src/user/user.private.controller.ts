@@ -19,13 +19,13 @@ import { Roles } from 'src/auth/role.decorator';
 
 @ApiTags('user')
 @Controller({ path: '/user', version: '1' })
-export class UserController {
-  private readonly logger = new Logger(UserController.name);
+export class UserPrivateController {
+  private readonly logger = new Logger(UserPrivateController.name);
 
   constructor(private readonly userService: UserService) {}
 
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles('MANAGER', 'ADMIN')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('MANAGER', 'ADMIN')
   @Post()
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'User created successfully.' })

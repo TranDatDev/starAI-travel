@@ -14,11 +14,13 @@ export declare class AuthService {
     }>;
     login(user: any): Promise<{
         access_token: string;
+        id: any;
     }>;
     register(data: {
         email: string;
         password: string;
     }): Promise<{
         access_token: string;
+        id: any;
     }>;
 }

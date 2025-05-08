@@ -4,13 +4,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { nanoid } from 'nanoid';
 import * as bcrypt from 'bcrypt';
-
+import { BadRequestException, HttpException } from '@nestjs/common/exceptions';
+import { PartnerStatus } from '../../generated/prisma';
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
     const id = nanoid(8);
+    const profileId = nanoid(8);
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
     return this.prisma.user.create({
@@ -18,6 +20,18 @@ export class UserService {
         id,
         email: createUserDto.email,
         password: hashedPassword,
+        profile: {
+          create: {
+            id: profileId,
+            bio: '',
+            birthday: null,
+            gender: '',
+            location: '',
+          },
+        },
+      },
+      include: {
+        profile: true,
       },
     });
   }
@@ -39,6 +53,21 @@ export class UserService {
         id: true,
         name: true,
         email: true,
+      },
+    });
+  }
+
+  getUserInfoById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        name: true,
+        email: true,
+        phoneNumber: true,
+        avatar: true,
+        language: true,
+        theme: true,
+        profile: true,
       },
     });
   }
@@ -69,5 +98,67 @@ export class UserService {
         role: true,
       },
     });
+  }
+
+  async getAllRequestPartnerFromUserByManager(status: string) {
+    return this.prisma.partnerInfo.findMany({
+      where: { status: status as PartnerStatus },
+      select: {
+        id: true,
+        userId: true,
+        organization: true,
+        licenseNumber: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  }
+
+  async getSpecificRequestPartnerFromUserByManager(userId: string) {
+    return this.prisma.partnerInfo.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        userId: true,
+        organization: true,
+        licenseNumber: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  }
+
+  async requestPartnerRole(
+    userId: string,
+    organization: string,
+    licenseNumber: string,
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { partnerInfo: true },
+    });
+
+    if (!user) throw new Error('User not found');
+    if (user.role !== 'USER')
+      throw new HttpException(
+        'Only regular users can request partner role',
+        403,
+      );
+    if (user.partnerInfo)
+      throw new BadRequestException('You have already requested partner role');
+
+    await this.prisma.partnerInfo.create({
+      data: {
+        id: nanoid(8),
+        userId,
+        organization,
+        licenseNumber,
+        status: 'PENDING',
+      },
+    });
+
+    return { message: 'Partner request submitted' };
   }
 }

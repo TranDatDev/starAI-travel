@@ -9,11 +9,13 @@ export declare class AuthController {
         adminkey?: string;
     }): Promise<{
         access_token: string;
+        id: any;
     }>;
     register(body: {
         email: string;
         password: string;
     }): Promise<{
         access_token: string;
+        id: any;
     }>;
 }

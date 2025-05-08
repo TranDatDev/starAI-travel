@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package place;
+
+service PlaceService {
+  rpc GetServiceDetails (ServiceRequest) returns (ServiceDetailsResponse);
+}
+
+message ServiceRequest {
+  string serviceId = 1;
+  string serviceType = 2; // accommodation, restaurant, attraction
+}
+
+message ServiceDetails {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  // Thêm các thông tin khác của service
+}
+
+message ServiceDetailsResponse {
+  repeated ServiceDetails details = 1;
+}

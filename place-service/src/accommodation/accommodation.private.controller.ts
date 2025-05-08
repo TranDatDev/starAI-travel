@@ -54,8 +54,8 @@ export class AccommodationPrivateController {
     description: 'Danh sách cơ sở lưu trú',
     type: [Accommodation],
   })
-  async findAll(@Query() filterDto: AccommodationFilterDto) {
-    return this.accommodationService.findAll(filterDto);
+  async findAllByAdmin(@Query() filterDto: AccommodationFilterDto) {
+    return this.accommodationService.findAllByAdmin(filterDto);
   }
 
   @Get(':id')
@@ -111,9 +111,14 @@ export class AccommodationPrivateController {
     description: 'Xoá thành công',
   })
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{ message: string }> {
-    await this.accommodationService.remove(id);
-    return { message: `Accommodation with ID ${id} has been deleted` };
+  async remove(
+    @Param('id') id: string,
+    @Query('type') type: 'soft' | 'hard',
+  ): Promise<{ message: string }> {
+    await this.accommodationService.remove(id, type);
+    return {
+      message: `Accommodation with ID ${id} has been deleted (${type})`,
+    };
   }
 
   @Post(':shortId/upload-image')

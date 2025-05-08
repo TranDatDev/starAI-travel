@@ -125,12 +125,110 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   password: 'password',
-  role: 'role'
+  phoneNumber: 'phoneNumber',
+  avatar: 'avatar',
+  language: 'language',
+  theme: 'theme',
+  isBanned: 'isBanned',
+  isDeleted: 'isDeleted',
+  isVerified: 'isVerified',
+  role: 'role',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bio: 'bio',
+  birthday: 'birthday',
+  gender: 'gender',
+  location: 'location'
+};
+
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  content: 'content',
+  imageUrl: 'imageUrl',
+  isPublic: 'isPublic',
+  isDeleted: 'isDeleted',
+  isDisabled: 'isDisabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PartnerInfoScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  organization: 'organization',
+  licenseNumber: 'licenseNumber',
+  status: 'status',
+  verifiedById: 'verifiedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StaffScalarFieldEnum = {
+  id: 'id',
+  partnerId: 'partnerId',
+  name: 'name',
+  position: 'position',
+  email: 'email',
+  phoneNumber: 'phoneNumber'
+};
+
+exports.Prisma.UserHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  serviceId: 'serviceId',
+  service: 'service',
+  viewedAt: 'viewedAt',
+  metadata: 'metadata'
+};
+
+exports.Prisma.ManagerHistoryScalarFieldEnum = {
+  id: 'id',
+  managerId: 'managerId',
+  action: 'action',
+  actionScope: 'actionScope',
+  targetId: 'targetId',
+  targetType: 'targetType',
+  description: 'description',
+  httpMethod: 'httpMethod',
+  httpUrl: 'httpUrl',
+  httpQuery: 'httpQuery',
+  httpParams: 'httpParams',
+  httpBody: 'httpBody',
+  httpHeaders: 'httpHeaders',
+  actedAt: 'actedAt'
+};
+
+exports.Prisma.AdminHistoryScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  action: 'action',
+  targetId: 'targetId',
+  targetType: 'targetType',
+  description: 'description',
+  httpMethod: 'httpMethod',
+  httpUrl: 'httpUrl',
+  httpQuery: 'httpQuery',
+  httpParams: 'httpParams',
+  httpBody: 'httpBody',
+  httpHeaders: 'httpHeaders',
+  actedAt: 'actedAt'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullsOrder = {
@@ -142,7 +240,77 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  password: 'password'
+  password: 'password',
+  phoneNumber: 'phoneNumber',
+  avatar: 'avatar',
+  language: 'language',
+  theme: 'theme'
+};
+
+exports.Prisma.ProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bio: 'bio',
+  gender: 'gender',
+  location: 'location'
+};
+
+exports.Prisma.PostOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  content: 'content',
+  imageUrl: 'imageUrl'
+};
+
+exports.Prisma.PartnerInfoOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  organization: 'organization',
+  licenseNumber: 'licenseNumber',
+  verifiedById: 'verifiedById'
+};
+
+exports.Prisma.StaffOrderByRelevanceFieldEnum = {
+  id: 'id',
+  partnerId: 'partnerId',
+  name: 'name',
+  position: 'position',
+  email: 'email',
+  phoneNumber: 'phoneNumber'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.UserHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  serviceId: 'serviceId'
+};
+
+exports.Prisma.ManagerHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  managerId: 'managerId',
+  targetId: 'targetId',
+  description: 'description',
+  httpUrl: 'httpUrl'
+};
+
+exports.Prisma.AdminHistoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  targetId: 'targetId',
+  description: 'description',
+  httpUrl: 'httpUrl'
 };
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
@@ -151,8 +319,57 @@ exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN'
 };
 
+exports.PartnerStatus = exports.$Enums.PartnerStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+exports.ServiceType = exports.$Enums.ServiceType = {
+  ACCOMMODATION: 'ACCOMMODATION',
+  RESTAURANT: 'RESTAURANT',
+  ATTRACTION: 'ATTRACTION'
+};
+
+exports.ManagerAction = exports.$Enums.ManagerAction = {
+  MANAGE_USER: 'MANAGE_USER',
+  MANAGE_PARTNER: 'MANAGE_PARTNER'
+};
+
+exports.TargetType = exports.$Enums.TargetType = {
+  USER: 'USER',
+  PARTNER: 'PARTNER',
+  POST: 'POST',
+  TOURISM_INFO: 'TOURISM_INFO',
+  AI_MODEL: 'AI_MODEL'
+};
+
+exports.HttpMethod = exports.$Enums.HttpMethod = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  DELETE: 'DELETE',
+  PATCH: 'PATCH',
+  OPTIONS: 'OPTIONS',
+  HEAD: 'HEAD'
+};
+
+exports.AdminAction = exports.$Enums.AdminAction = {
+  MANAGE_MANAGER: 'MANAGE_MANAGER',
+  RESTORE_USER: 'RESTORE_USER',
+  ANALYZE_DATA: 'ANALYZE_DATA',
+  MANAGE_AI: 'MANAGE_AI'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Profile: 'Profile',
+  Post: 'Post',
+  PartnerInfo: 'PartnerInfo',
+  Staff: 'Staff',
+  UserHistory: 'UserHistory',
+  ManagerHistory: 'ManagerHistory',
+  AdminHistory: 'AdminHistory'
 };
 
 /**

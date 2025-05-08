@@ -16,11 +16,132 @@ datasource db {
 
 
 model User {
-  id    String @id @default("") @db.VarChar(8)
-  name  String?
-  email String @unique
-  password String
-  role Role @default(USER)
+  id          String        @id @default("") @db.VarChar(8)
+  name        String?
+  email       String        @unique
+  password    String
+  phoneNumber String?
+  avatar      String?
+  language    String?       @default("vi-VN")
+  theme       String?       @default("light")
+  isBanned     Boolean      @default(false)
+  isDeleted   Boolean       @default(false)
+  isVerified  Boolean       @default(false)
+  role        Role          @default(USER)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  profile      Profile?
+  posts        Post[]
+  partnerInfo  PartnerInfo?
+  userHistory  UserHistory[]
+  managerLogs  ManagerHistory[] @relation("ManagerLogs")
+  adminLogs    AdminHistory[]   @relation("AdminLogs")
+  verifiedPartners PartnerInfo[] @relation("VerifiedByAdmin")
+}
+
+model Profile {
+  id        String   @id @default("") @db.VarChar(8)
+  userId    String   @unique
+  bio       String?
+  birthday  DateTime?
+  gender    String?
+  location  String?
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id        String   @id @default("") @db.VarChar(8)
+  userId    String
+  title     String
+  content   String
+  imageUrl  String?
+  isPublic  Boolean  @default(true)
+  isDeleted Boolean  @default(false)
+  isDisabled Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model PartnerInfo {
+  id             String        @id @default("") @db.VarChar(8)
+  userId         String        @unique
+  organization   String?
+  licenseNumber  String?
+  status         PartnerStatus @default(PENDING)
+  verifiedById   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user           User          @relation(fields: [userId], references: [id])
+  verifiedBy     User?         @relation("VerifiedByAdmin", fields: [verifiedById], references: [id])
+  staffMembers   Staff[]
+}
+
+model Staff {
+  id             String   @id @default("") @db.VarChar(8)
+  partnerId      String
+  name           String
+  position       String
+  email          String
+  phoneNumber    String
+
+  partner        PartnerInfo @relation(fields: [partnerId], references: [id])
+}
+
+model UserHistory {
+  id         String      @id @default("") @db.VarChar(8)
+  userId     String
+  serviceId  String      @db.VarChar(8)
+  service    ServiceType
+  viewedAt   DateTime    @default(now())
+  metadata   Json?
+
+  user       User        @relation(fields: [userId], references: [id])
+}
+
+model ManagerHistory {
+  id          String        @id @default("") @db.VarChar(8)
+  managerId   String
+  action      ManagerAction
+  actionScope Json?
+  targetId    String?       @db.VarChar(8)
+  targetType  TargetType?
+  description String?
+  // HTTP Request
+  httpMethod       HttpMethod?
+  httpUrl          String?
+  httpQuery        Json?
+  httpParams       Json?
+  httpBody         Json?
+  httpHeaders      Json?
+
+  actedAt     DateTime      @default(now())
+
+  manager     User          @relation("ManagerLogs", fields: [managerId], references: [id])
+}
+
+model AdminHistory {
+  id          String        @id @default("") @db.VarChar(8)
+  adminId     String
+  action      AdminAction
+  targetId    String?       @db.VarChar(8)
+  targetType  TargetType?
+  description String?
+  // HTTP Request
+  httpMethod       HttpMethod?
+  httpUrl          String?
+  httpQuery        Json?
+  httpParams       Json?
+  httpBody         Json?
+  httpHeaders      Json?
+
+  actedAt     DateTime      @default(now())
+
+  admin       User          @relation("AdminLogs", fields: [adminId], references: [id])
 }
 
 enum Role {
@@ -28,4 +149,46 @@ enum Role {
   PARTNER
   MANAGER
   ADMIN
+}
+
+enum PartnerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ServiceType {
+  ACCOMMODATION
+  RESTAURANT
+  ATTRACTION
+}
+
+enum ManagerAction {
+  MANAGE_USER
+  MANAGE_PARTNER
+}
+
+enum AdminAction {
+  MANAGE_MANAGER
+  RESTORE_USER
+  ANALYZE_DATA
+  MANAGE_AI
+}
+
+enum TargetType {
+  USER
+  PARTNER
+  POST
+  TOURISM_INFO
+  AI_MODEL
+}
+
+enum HttpMethod {
+  GET
+  POST
+  PUT
+  DELETE
+  PATCH
+  OPTIONS
+  HEAD
 }

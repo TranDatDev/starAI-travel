@@ -41,7 +41,9 @@ export class AccommodationService {
       isFeatured,
     } = filterDto;
 
-    const baseMatch: any = {};
+    const baseMatch: any = {
+      isDeleted: { $ne: true },
+    };
 
     // Tìm kiếm bằng thanh tìm kiếm
     if (search) {
@@ -110,7 +112,108 @@ export class AccommodationService {
       limit,
     };
   }
+  async findAllByAdmin(filterDto: AccommodationFilterDto): Promise<any> {
+    const {
+      search,
+      communeId,
+      districtId,
+      provinceId,
+      communeSlug,
+      districtSlug,
+      provinceSlug,
+      sortBy,
+      sortOrder,
+      page = 1,
+      limit = 10,
+      category,
+      minPrice,
+      maxPrice,
+      isAvailable,
+      isFeatured,
+    } = filterDto;
 
+    const baseMatch: any = {};
+
+    if (search) {
+      baseMatch.$or = [
+        { slug: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (category) baseMatch.category = category;
+    if (typeof isAvailable === 'boolean') baseMatch.isAvailable = isAvailable;
+    if (typeof isFeatured === 'boolean') baseMatch.isFeatured = isFeatured;
+
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      if (minPrice !== undefined) baseMatch.maxPrice = { $gte: minPrice };
+      if (maxPrice !== undefined) baseMatch.minPrice = { $lte: maxPrice };
+    }
+
+    const projectFields = {
+      shortId: 1,
+      name: 1,
+      description: 1,
+      minPrice: 1,
+      maxPrice: 1,
+      category: 1,
+      createdAt: 1,
+      address: 1,
+      communeId: 1,
+      districtId: 1,
+      provinceId: 1,
+      images: 1,
+      maxGuests: 1,
+      maxRooms: 1,
+      officialRating: 1,
+      userRating: 1,
+      reviewsCount: 1,
+      amenities: 1,
+      contactPhone: 1,
+      contactEmail: 1,
+      isAvailable: 1,
+      isFeatured: 1,
+      tags: 1,
+      policies: 1,
+      fullAddress: {
+        $concat: [
+          '$address',
+          ', ',
+          { $ifNull: ['$commune.fullName', ''] },
+          ', ',
+          { $ifNull: ['$district.fullName', ''] },
+          ', ',
+          { $ifNull: ['$province.fullName', ''] },
+        ],
+      },
+    };
+
+    const pipeline = buildLocationAggregation({
+      baseMatch,
+      communeId,
+      districtId,
+      provinceId,
+      communeSlug,
+      districtSlug,
+      provinceSlug,
+      sortBy,
+      sortOrder,
+      page,
+      limit,
+      projectFields,
+    });
+
+    const result = await this.accommodationModel.aggregate(pipeline).exec();
+    const data = result[0].data;
+    const total = result[0].total[0]?.count || 0;
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
+  }
   async findOne(id: string): Promise<Accommodation> {
     const accommodation = await this.accommodationModel.findById(id).exec();
     if (!accommodation) {
@@ -211,10 +314,19 @@ export class AccommodationService {
     return updatedAccommodation;
   }
 
-  async remove(id: string): Promise<void> {
-    const result = await this.accommodationModel.findByIdAndDelete(id).exec();
-    if (!result) {
-      throw new NotFoundException(`Accommodation with ID ${id} not found`);
+  async remove(id: string, type: 'soft' | 'hard' = 'soft'): Promise<void> {
+    if (type === 'soft') {
+      const result = await this.accommodationModel
+        .findByIdAndUpdate(id, { isDeleted: true }, { new: true })
+        .exec();
+      if (!result) {
+        throw new NotFoundException(`Accommodation with ID ${id} not found`);
+      }
+    } else {
+      const result = await this.accommodationModel.findByIdAndDelete(id).exec();
+      if (!result) {
+        throw new NotFoundException(`Accommodation with ID ${id} not found`);
+      }
     }
   }
 
