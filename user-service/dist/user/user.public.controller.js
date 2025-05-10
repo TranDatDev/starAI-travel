@@ -24,6 +24,7 @@ const role_decorator_1 = require("../auth/role.decorator");
 const ownership_guard_1 = require("../auth/ownership.guard");
 const update_user_public_dto_1 = require("./dto/update-user.public.dto");
 const request_partner_dto_1 = require("./dto/request-partner.dto");
+const platform_express_1 = require("@nestjs/platform-express");
 let UserPublicController = UserPublicController_1 = class UserPublicController {
     userService;
     logger = new common_1.Logger(UserPublicController_1.name);
@@ -38,6 +39,18 @@ let UserPublicController = UserPublicController_1 = class UserPublicController {
         this.logger.log(`Updating user ${id}`);
         return this.userService.update(id, dto);
     }
+    async uploadAvatar(id, file) {
+        if (!file) {
+            throw new common_1.BadRequestException('File is missing or invalid');
+        }
+        try {
+            const avatarUrl = await this.userService.updateAvatar(id, file);
+            return { avatarUrl };
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message || 'Failed to upload avatar');
+        }
+    }
     async requestPartner(userId, dto) {
         return this.userService.requestPartnerRole(userId, dto.organization, dto.licenseNumber);
     }
@@ -45,7 +58,7 @@ let UserPublicController = UserPublicController_1 = class UserPublicController {
 exports.UserPublicController = UserPublicController;
 __decorate([
     (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
-    (0, role_decorator_1.Roles)('USER'),
+    (0, role_decorator_1.Roles)('USER', 'PARTNER'),
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, description: 'User ID' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'User found.' }),
@@ -57,7 +70,7 @@ __decorate([
 ], UserPublicController.prototype, "getUserInfoById", null);
 __decorate([
     (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
-    (0, role_decorator_1.Roles)('USER'),
+    (0, role_decorator_1.Roles)('USER', 'PARTNER'),
     (0, common_1.Patch)(':id'),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, description: 'User ID' }),
     (0, swagger_1.ApiBody)({ type: update_user_public_dto_1.UpdateUserPublicDto }),
@@ -69,6 +82,33 @@ __decorate([
     __metadata("design:paramtypes", [String, update_user_public_dto_1.UpdateUserPublicDto]),
     __metadata("design:returntype", void 0)
 ], UserPublicController.prototype, "update", null);
+__decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
+    (0, role_decorator_1.Roles)('USER', 'PARTNER'),
+    (0, common_1.Patch)(':id/avatar'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    (0, swagger_1.ApiParam)({ name: 'id', type: String, description: 'User ID' }),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Avatar uploaded successfully.' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Invalid file or size exceeded.' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'User not found.' }),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], UserPublicController.prototype, "uploadAvatar", null);
 __decorate([
     (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
     (0, role_decorator_1.Roles)('USER'),

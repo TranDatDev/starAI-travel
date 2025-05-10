@@ -15,10 +15,10 @@ export declare class AdminController {
             userId: string;
         } | null;
     } & {
-        id: string;
         name: string | null;
         email: string;
         password: string;
+        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;

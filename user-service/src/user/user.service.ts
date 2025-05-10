@@ -6,9 +6,13 @@ import { nanoid } from 'nanoid';
 import * as bcrypt from 'bcrypt';
 import { BadRequestException, HttpException } from '@nestjs/common/exceptions';
 import { PartnerStatus } from '../../generated/prisma';
+import { SupabaseService } from '../supabase/supabase.service';
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly supabaseService: SupabaseService,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     const id = nanoid(8);
@@ -160,5 +164,30 @@ export class UserService {
     });
 
     return { message: 'Partner request submitted' };
+  }
+
+  async updateAvatar(
+    userId: string,
+    file: Express.Multer.File,
+  ): Promise<{ avatarUrl: string }> {
+    const fileName = `user-${userId}-${Date.now()}-avatar.webp`;
+    const bucket = 'user-files';
+
+    const avatarUrl = await this.supabaseService.processAndUploadImage(
+      file.buffer,
+      bucket,
+      fileName,
+      70,
+      300,
+      300,
+      'webp',
+    );
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { avatar: avatarUrl },
+    });
+
+    return { avatarUrl };
   }
 }

@@ -14,10 +14,10 @@ export declare class ManagerService {
             userId: string;
         } | null;
     } & {
-        id: string;
         name: string | null;
         email: string;
         password: string;
+        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;
@@ -42,19 +42,19 @@ export declare class ManagerService {
         httpBody?: any;
         httpHeaders?: any;
     }): Promise<{
+        description: string | null;
         id: string;
         managerId: string;
         action: import("../../generated/prisma").$Enums.ManagerAction;
-        actionScope: import("generated/prisma/runtime/library").JsonValue | null;
         targetId: string | null;
         targetType: import("../../generated/prisma").$Enums.TargetType | null;
-        description: string | null;
         httpMethod: import("../../generated/prisma").$Enums.HttpMethod | null;
         httpUrl: string | null;
         httpQuery: import("generated/prisma/runtime/library").JsonValue | null;
         httpParams: import("generated/prisma/runtime/library").JsonValue | null;
         httpBody: import("generated/prisma/runtime/library").JsonValue | null;
         httpHeaders: import("generated/prisma/runtime/library").JsonValue | null;
+        actionScope: import("generated/prisma/runtime/library").JsonValue | null;
         actedAt: Date;
     }>;
     verifyPartnerRequest(params: {

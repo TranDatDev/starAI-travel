@@ -1,9 +1,11 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { SupabaseService } from '../supabase/supabase.service';
 export declare class UserService {
     private readonly prisma;
-    constructor(prisma: PrismaService);
+    private readonly supabaseService;
+    constructor(prisma: PrismaService, supabaseService: SupabaseService);
     create(createUserDto: CreateUserDto): Promise<{
         profile: {
             id: string;
@@ -113,5 +115,8 @@ export declare class UserService {
     }[]>;
     requestPartnerRole(userId: string, organization: string, licenseNumber: string): Promise<{
         message: string;
+    }>;
+    updateAvatar(userId: string, file: Express.Multer.File): Promise<{
+        avatarUrl: string;
     }>;
 }

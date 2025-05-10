@@ -15,10 +15,13 @@ const prisma_service_1 = require("../prisma/prisma.service");
 const nanoid_1 = require("nanoid");
 const bcrypt = require("bcrypt");
 const exceptions_1 = require("@nestjs/common/exceptions");
+const supabase_service_1 = require("../supabase/supabase.service");
 let UserService = class UserService {
     prisma;
-    constructor(prisma) {
+    supabaseService;
+    constructor(prisma, supabaseService) {
         this.prisma = prisma;
+        this.supabaseService = supabaseService;
     }
     async create(createUserDto) {
         const id = (0, nanoid_1.nanoid)(8);
@@ -151,10 +154,21 @@ let UserService = class UserService {
         });
         return { message: 'Partner request submitted' };
     }
+    async updateAvatar(userId, file) {
+        const fileName = `user-${userId}-${Date.now()}-avatar.webp`;
+        const bucket = 'user-files';
+        const avatarUrl = await this.supabaseService.processAndUploadImage(file.buffer, bucket, fileName, 70, 300, 300, 'webp');
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: { avatar: avatarUrl },
+        });
+        return { avatarUrl };
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        supabase_service_1.SupabaseService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AdminModule } from './admin/admin.module';
 import { ManagerModule } from './manager/manager.module';
 import { PartnerModule } from './partner/partner.module';
+import { SupabaseModule } from './supabase/supabase.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -17,6 +18,7 @@ import { PartnerModule } from './partner/partner.module';
     AdminModule,
     ManagerModule,
     PartnerModule,
+    SupabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
