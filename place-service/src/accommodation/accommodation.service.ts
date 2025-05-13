@@ -314,6 +314,26 @@ export class AccommodationService {
     return updatedAccommodation;
   }
 
+  async updateDescriptionByLanguage(
+    id: string,
+    lang: string,
+    value: string,
+  ): Promise<Accommodation> {
+    const updatedAccommodation = await this.accommodationModel
+      .findByIdAndUpdate(
+        id,
+        { $set: { [`description.${lang}`]: value } },
+        { new: true },
+      )
+      .select('description');
+
+    if (!updatedAccommodation) {
+      throw new NotFoundException(`Accommodation with ID ${id} not found`);
+    }
+
+    return updatedAccommodation;
+  }
+
   async remove(id: string, type: 'soft' | 'hard' = 'soft'): Promise<void> {
     if (type === 'soft') {
       const result = await this.accommodationModel

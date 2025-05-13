@@ -1,7 +1,7 @@
 import { accommodationApi } from '@/services/api';
 import { AccommodationFilter } from '../types/accommodation-filter';
 export const fetchAccommodations = async (page: number, limit: number) => {
-    const response = await accommodationApi.get('/accommodation', {
+    const response = await accommodationApi.get('/api/v1/public/accommodation', {
         params: { page, limit },
     });
     console.log('Accommodation response:', response.data);
@@ -11,7 +11,7 @@ export const fetchAccommodations = async (page: number, limit: number) => {
 export const fetchAccommodationsByFilter = async (filters: AccommodationFilter) => {
     try {
         console.log('Fetching accommodations with filters:', filters);
-        const response = await accommodationApi.get('/accommodation', {
+        const response = await accommodationApi.get('/api/v1/public/accommodation', {
             params: filters,
         });
         console.log('Accommodation response:', response);

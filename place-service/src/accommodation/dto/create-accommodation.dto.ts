@@ -12,6 +12,8 @@ import {
 import { Types } from 'mongoose';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { LocalizedDescriptionDto } from 'src/shared/dto/localizedDescriptionDto';
+import { CoordinatesDto } from 'src/shared/dto/coordinatesDto';
 
 class PoliciesDto {
   @ApiPropertyOptional()
@@ -30,68 +32,26 @@ class PoliciesDto {
   checkOut?: string;
 }
 
-export class CoordinatesDto {
-  @ApiProperty({ enum: ['Point'], default: 'Point' })
-  @IsIn(['Point'])
-  type: 'Point';
-
-  @ApiProperty({
-    example: [106.689, 10.762],
-    description: 'Kinh độ, vĩ độ [longitude, latitude]',
-  })
-  @IsArray()
-  @Type(() => Number)
-  coordinates: [number, number];
-}
-
 export class CreateAccommodationDto {
   @ApiProperty()
   @IsString()
   name: string;
 
+  @ApiPropertyOptional({ type: LocalizedDescriptionDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => LocalizedDescriptionDto)
+  description?: LocalizedDescriptionDto;
+
   @ApiProperty()
   @IsString()
   address: string;
 
-  @ApiProperty()
-  @IsString()
-  category: string;
-
-  @ApiProperty()
-  @IsNumber()
-  minPrice: number;
-
-  @ApiProperty()
-  @IsNumber()
-  maxPrice: number;
-
-  @ApiPropertyOptional({ type: String })
+  @ApiPropertyOptional({ type: [String] })
   @IsOptional()
-  communeId?: Types.ObjectId;
-
-  @ApiProperty({ type: CoordinatesDto })
-  @ValidateNested()
-  @Type(() => CoordinatesDto)
-  coordinates: CoordinatesDto;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  isAvailable?: boolean;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  isFeatured?: boolean;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  description?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  ManagerId?: string;
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
 
   @ApiPropertyOptional({ type: [String] })
   @IsOptional()
@@ -102,33 +62,17 @@ export class CreateAccommodationDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  maxGuests?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsNumber()
-  maxRooms?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsNumber()
   officialRating?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  userRating?: number;
+  reviewsTotal?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   reviewsCount?: number;
-
-  @ApiPropertyOptional({ type: [String] })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  amenities?: string[];
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -140,15 +84,69 @@ export class CreateAccommodationDto {
   @IsEmail()
   contactEmail?: string;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isAvailable?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  openingHours?: string[];
+
+  @ApiProperty()
+  @IsString()
+  website: string;
+
   @ApiPropertyOptional({ type: [String] })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  tags?: string[];
+  amenities?: string[];
+
+  @ApiProperty()
+  @IsNumber()
+  minPrice: number;
+
+  @ApiProperty()
+  @IsNumber()
+  maxPrice: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  maxGuests?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  maxRooms?: number;
 
   @ApiPropertyOptional({ type: PoliciesDto })
   @IsOptional()
   @ValidateNested()
   @Type(() => PoliciesDto)
   policies?: PoliciesDto;
+
+  @ApiProperty({ type: CoordinatesDto })
+  @ValidateNested()
+  @Type(() => CoordinatesDto)
+  coordinates: CoordinatesDto;
+
+  @ApiProperty()
+  @IsString()
+  category: string;
+
+  @ApiProperty()
+  @IsString()
+  adminId: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  communeId: Types.ObjectId;
 }

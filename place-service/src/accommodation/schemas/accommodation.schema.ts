@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { nanoid } from 'nanoid';
 import { generateSlugWithShortId } from 'src/utils/slug.util';
 import { Commune } from 'src/location/schemas/commune.schema';
-
+import { LocalizedDescription } from 'src/shared/types/localizedDescription';
 export type AccommodationDocument = Accommodation & Document;
 
 @Schema({ timestamps: true })
@@ -21,14 +21,79 @@ export class Accommodation {
   @Prop({ type: String, unique: true })
   slug: string;
 
-  @Prop({ required: true, trim: true })
-  description: string;
+  @Prop({ type: Object, required: true, trim: true })
+  description: LocalizedDescription;
 
   @Prop({ required: true, trim: true })
   address: string;
 
-  @Prop({ type: Types.ObjectId, ref: Commune.name, required: true })
-  communeId: Types.ObjectId;
+  @Prop({ type: [String], default: [] })
+  tags: string[];
+
+  @Prop({ type: [String], default: [] })
+  images: string[];
+
+  @Prop({ type: Number, min: 1, max: 5, default: null })
+  officialRating?: number;
+
+  @Prop({ type: Number, min: 0, default: 0 })
+  reviewsTotal: number;
+
+  @Prop({ type: Number, min: 0, default: 1 })
+  reviewsCount: number;
+
+  @Prop({ type: Number, min: 0, max: 5, default: 0 })
+  userRating: number;
+
+  @Prop({ type: String })
+  contactPhone?: string;
+
+  @Prop({ type: String })
+  contactEmail?: string;
+
+  @Prop({ default: true })
+  isAvailable: boolean;
+
+  @Prop({ default: false })
+  isDeleted: boolean;
+
+  @Prop({ default: false })
+  isFeatured: boolean;
+
+  @Prop({ type: [String], default: [] })
+  openingHours?: string[];
+
+  @Prop({ type: String })
+  website?: string;
+
+  @Prop({ type: [String], default: [] })
+  amenities: string[];
+
+  @Prop({ required: true, min: 0 })
+  minPrice: number;
+
+  @Prop({ required: true, min: 0 })
+  maxPrice: number;
+
+  @Prop({ default: 1, min: 1 })
+  maxGuests: number;
+
+  @Prop({ default: 1, min: 1 })
+  maxRooms: number;
+
+  @Prop({
+    type: {
+      cancellation: { type: String },
+      checkIn: { type: String },
+      checkOut: { type: String },
+    },
+    default: {},
+  })
+  policies?: {
+    cancellation?: string;
+    checkIn?: string;
+    checkOut?: string;
+  };
 
   @Prop({
     type: {
@@ -55,19 +120,6 @@ export class Accommodation {
     type: 'Point';
     coordinates: [number, number];
   };
-  @Prop({
-    type: {
-      cancellation: { type: String },
-      checkIn: { type: String },
-      checkOut: { type: String },
-    },
-    default: {},
-  })
-  policies?: {
-    cancellation?: string;
-    checkIn?: string;
-    checkOut?: string;
-  };
 
   @Prop({
     enum: [
@@ -83,53 +135,11 @@ export class Accommodation {
   })
   category: string;
 
-  @Prop({ required: true, min: 0 })
-  minPrice: number;
-
-  @Prop({ required: true, min: 0 })
-  maxPrice: number;
-
-  @Prop({ type: [String], default: [] })
-  images: string[];
-
-  @Prop({ default: 1, min: 1 })
-  maxGuests: number;
-
-  @Prop({ default: 1, min: 1 })
-  maxRooms: number;
-
-  @Prop({ type: Number, min: 1, max: 5, default: null })
-  officialRating?: number;
-
-  @Prop({ type: Number, min: 0, max: 5, default: 0 })
-  userRating: number;
-
-  @Prop({ default: 0 })
-  reviewsCount: number;
-
-  @Prop({ type: [String], default: [] })
-  amenities: string[];
-
   @Prop({ type: String })
-  contactPhone?: string;
+  adminId: string;
 
-  @Prop({ type: String })
-  contactEmail?: string;
-
-  @Prop({ default: true })
-  isAvailable: boolean;
-
-  @Prop({ default: false })
-  isDeleted: boolean;
-
-  @Prop({ default: false })
-  isFeatured: boolean;
-
-  @Prop({ type: [String], default: [] })
-  tags: string[];
-
-  @Prop({ type: String })
-  ManagerId: string;
+  @Prop({ type: Types.ObjectId, ref: Commune.name, required: true })
+  communeId: Types.ObjectId;
 }
 
 export const AccommodationSchema = SchemaFactory.createForClass(Accommodation);
@@ -137,6 +147,15 @@ export const AccommodationSchema = SchemaFactory.createForClass(Accommodation);
 AccommodationSchema.pre<AccommodationDocument>('save', function (next) {
   if (!this.slug && this.name) {
     this.slug = generateSlugWithShortId(this.name, this.shortId);
+  }
+  next();
+});
+
+AccommodationSchema.pre<AccommodationDocument>('save', function (next) {
+  if (this.reviewsCount > 0) {
+    this.userRating = this.reviewsTotal / this.reviewsCount;
+  } else {
+    this.userRating = 0;
   }
   next();
 });

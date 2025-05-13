@@ -26,7 +26,7 @@ import {
 } from '@/services/general/accommodationService';
 import { fetchRestaurants, fetchRestaurantsByFilter } from '@/services/general/restaurantService';
 import { fetchAttractions, fetchAttractionsByFilter } from '@/services/general/attractionService';
-
+import i18n from '@/locales/i18n';
 const fetchFunctions: Record<
     string,
     {
@@ -210,6 +210,7 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
+    const language = i18n.language;
     return (
         <AnimatedBox>
             {/* Filters */}
@@ -364,7 +365,9 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                             <Card className="px-2 py-8 rounded-lg shadow">
                                 <CardContent>
                                     <h3 className="font-semibold text-lg">{item.name}</h3>
-                                    <h4 className="text-sm text-gray-500">{item.description}</h4>
+                                    <h4 className="text-sm text-gray-500">
+                                        {item.description[language]}
+                                    </h4>
                                     <p className="text-sm">{item.fullAddress}</p>
                                     <div className="flex mt-2">
                                         <CurrencyConverter amount={item.minPrice} />

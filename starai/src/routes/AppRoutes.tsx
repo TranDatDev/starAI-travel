@@ -9,14 +9,16 @@ import Accommodation from '@/pages/Explore/Accommodation';
 import Attraction from '@/pages/Explore/Attraction';
 import Restaurant from '@/pages/Explore/Restaurant';
 import DetailInfo from '@/components/DetailInfo';
+import PrivateRoute from '@/components/PrivateRoute';
+import UserDetail from '@/components/user/UserDetail';
 const AppRoutes = (props: Props) => {
     return (
         <BrowserRouter>
             <Routes>
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
                 <Route path="/" element={<DefaultLayout />}>
                     <Route index element={<Home />} />
-                    <Route path="login" element={<Login />} />
-                    <Route path="register" element={<Register />} />
                     <Route path="accommodation" element={<Accommodation />} />
                     <Route
                         path="accommodation/:id"
@@ -26,10 +28,16 @@ const AppRoutes = (props: Props) => {
                     <Route path="attraction/:id" element={<DetailInfo service="attraction" />} />
                     <Route path="restaurant" element={<Restaurant />} />
                     <Route path="restaurant/:id" element={<DetailInfo service="restaurant" />} />
+                    <Route
+                        path="user/:id"
+                        element={
+                            <PrivateRoute>
+                                <UserDetail />
+                            </PrivateRoute>
+                        }
+                    />
                 </Route>
-                {/* <Route path="/dashboard" element={<ProtectedRoute />}>
-            <Route index element={<Dashboard />} />
-          </Route> */}
+                <Route path="*" element={<div>404 Not Found</div>} />
             </Routes>
         </BrowserRouter>
     );

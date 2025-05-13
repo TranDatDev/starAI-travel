@@ -10,19 +10,21 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { languages } from '@/locales/i18n';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 type Props = {};
 
 export default function LangChange({}: Props) {
     const { t, i18n } = useTranslation();
+    const { updateLanguage, language } = useAuth();
     const currentLanguage = i18n.language;
-    const changeLanguage = (lng: string) => {
-        if (lng === currentLanguage) {
-            return;
-        }
-        i18n.changeLanguage(lng);
+    const changeLanguage = async (lng: string) => {
+        if (lng === currentLanguage) return;
+        await i18n.changeLanguage(lng);
+        updateLanguage(lng);
         toast(t('change-language-noti'));
     };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

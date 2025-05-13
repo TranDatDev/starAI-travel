@@ -1,28 +1,43 @@
 import axios, { AxiosInstance } from 'axios';
 
 export const accommodationApi = axios.create({
-    baseURL: import.meta.env.VITE_PUBLIC_SERVICE_API_URL,
+    baseURL: import.meta.env.VITE_PLACE_SERVICE_API_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 export const restaurantApi = axios.create({
-    baseURL: import.meta.env.VITE_PUBLIC_SERVICE_API_URL,
+    baseURL: import.meta.env.VITE_PLACE_SERVICE_API_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 export const attractionApi = axios.create({
-    baseURL: import.meta.env.VITE_PUBLIC_SERVICE_API_URL,
+    baseURL: import.meta.env.VITE_PLACE_SERVICE_API_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 export const locationApi = axios.create({
-    baseURL: import.meta.env.VITE_PUBLIC_SERVICE_API_URL,
+    baseURL: import.meta.env.VITE_PLACE_SERVICE_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+export const userApi = axios.create({
+    baseURL: import.meta.env.VITE_USER_SERVICE_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    },
+});
+
+export const authApi = axios.create({
+    baseURL: import.meta.env.VITE_USER_SERVICE_API_URL,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -39,7 +54,7 @@ export const fetchDetail = async (category: string, id: string) => {
         const apiInstance = GENERAL_API_INSTANCES[category];
         if (!apiInstance) throw new Error('Invalid category');
 
-        const response = await apiInstance.get(`/${category}/${id}`);
+        const response = await apiInstance.get(`/api/v1/public/${category}/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching ${category} detail:`, error);

@@ -1,7 +1,7 @@
 import { restaurantApi } from '@/services/api';
 import { RestaurantFilter } from '../types/restaurant-filter';
 export const fetchRestaurants = async (page: number, limit: number) => {
-    const response = await restaurantApi.get('/restaurant', {
+    const response = await restaurantApi.get('/api/v1/public/restaurant', {
         params: { page, limit },
     });
     console.log('Restaurant response:', response.data);
@@ -10,7 +10,7 @@ export const fetchRestaurants = async (page: number, limit: number) => {
 
 export const fetchRestaurantsByFilter = async (filters: RestaurantFilter) => {
     try {
-        const response = await restaurantApi.get('/restaurant', {
+        const response = await restaurantApi.get('/api/v1/public/restaurant', {
             params: filters,
         });
         console.log('Filtered restaurant response:', response.data);

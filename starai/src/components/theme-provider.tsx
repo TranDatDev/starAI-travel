@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -26,13 +27,14 @@ export function ThemeProvider({
     storageKey = 'vite-ui-theme',
     ...props
 }: ThemeProviderProps) {
-    const [theme, setTheme] = useState<Theme>(
+    const [theme, setThemeState] = useState<Theme>(
         () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
     );
 
+    const { theme: authTheme, updateTheme: updateAuthTheme } = useAuth();
+
     useEffect(() => {
         const root = window.document.documentElement;
-
         root.classList.remove('light', 'dark');
 
         if (theme === 'system') {
@@ -47,11 +49,20 @@ export function ThemeProvider({
         root.classList.add(theme);
     }, [theme]);
 
+    // Đồng bộ khi user đăng nhập lại (load từ AuthContext)
+    useEffect(() => {
+        if (authTheme) {
+            setThemeState(authTheme as Theme);
+            localStorage.setItem(storageKey, authTheme);
+        }
+    }, [authTheme, storageKey]);
+
     const value = {
         theme,
-        setTheme: (theme: Theme) => {
-            localStorage.setItem(storageKey, theme);
-            setTheme(theme);
+        setTheme: (newTheme: Theme) => {
+            setThemeState(newTheme);
+            localStorage.setItem(storageKey, newTheme);
+            updateAuthTheme(newTheme); // cập nhật về AuthContext và server
         },
     };
 

@@ -29,6 +29,10 @@ import { Accommodation } from './schemas/accommodation.schema';
 import { AccommodationFilterDto } from './dto/accommodation-filter.dto';
 import { CreateAccommodationDto } from './dto/create-accommodation.dto';
 import { UpdateAccommodationDto } from './dto/update-accommodation.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/role.guard';
+import { Roles } from 'src/auth/role.decorator';
+import { UseGuards } from '@nestjs/common/decorators/core/use-guards.decorator';
 @ApiTags('API nội bộ: Cơ sở lưu trú')
 @Controller({ path: '/private/accommodation', version: '1' })
 export class AccommodationPrivateController {
@@ -36,6 +40,9 @@ export class AccommodationPrivateController {
     private readonly accommodationService: AccommodationService,
     private readonly supabaseService: SupabaseService,
   ) {}
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Tạo mới một cơ sở lưu trú' })
   @ApiResponse({
@@ -47,6 +54,8 @@ export class AccommodationPrivateController {
     return this.accommodationService.create(data);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Lấy danh sách cơ sở lưu trú (kèm bộ lọc)' })
   @ApiResponse({
@@ -58,6 +67,8 @@ export class AccommodationPrivateController {
     return this.accommodationService.findAllByAdmin(filterDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get(':id')
   @ApiOperation({ summary: 'Lấy chi tiết một cơ sở lưu trú theo ID' })
   @ApiParam({
@@ -80,6 +91,8 @@ export class AccommodationPrivateController {
     return accommodation;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Cập nhật thông tin cơ sở lưu trú' })
   @ApiParam({
@@ -99,6 +112,8 @@ export class AccommodationPrivateController {
     return this.accommodationService.update(id, data);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   @ApiOperation({ summary: 'Xoá một cơ sở lưu trú theo ID' })
   @ApiParam({
@@ -121,6 +136,23 @@ export class AccommodationPrivateController {
     };
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Patch(':id/description')
+  async updateDescriptionByLanguage(
+    @Param('id') id: string,
+    @Query('lang') lang: string,
+    @Body('description') description: string,
+  ) {
+    return this.accommodationService.updateDescriptionByLanguage(
+      id,
+      lang,
+      description,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post(':shortId/upload-image')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload ảnh cho cơ sở lưu trú' })

@@ -22,7 +22,7 @@ model User {
   password    String
   phoneNumber String?
   avatar      String?
-  language    String?       @default("vi-VN")
+  language    String?       @default("vi")
   theme       String?       @default("light")
   isBanned     Boolean      @default(false)
   isDeleted   Boolean       @default(false)

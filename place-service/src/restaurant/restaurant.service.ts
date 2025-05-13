@@ -309,18 +309,38 @@ export class RestaurantService {
     return updatedRestaurant;
   }
 
+  async updateDescriptionByLanguage(
+    id: string,
+    lang: string,
+    value: string,
+  ): Promise<Restaurant> {
+    const updatedRestaurant = await this.restaurantModel
+      .findByIdAndUpdate(
+        id,
+        { $set: { [`description.${lang}`]: value } },
+        { new: true },
+      )
+      .select('description');
+
+    if (!updatedRestaurant) {
+      throw new NotFoundException(`Restaurant with ID ${id} not found`);
+    }
+
+    return updatedRestaurant;
+  }
+
   async remove(id: string, type: 'soft' | 'hard' = 'soft'): Promise<void> {
     if (type === 'soft') {
       const result = await this.restaurantModel
         .findByIdAndUpdate(id, { isDeleted: true }, { new: true })
         .exec();
       if (!result) {
-        throw new NotFoundException(`Attraction with ID ${id} not found`);
+        throw new NotFoundException(`Restaurant with ID ${id} not found`);
       }
     } else {
       const result = await this.restaurantModel.findByIdAndDelete(id).exec();
       if (!result) {
-        throw new NotFoundException(`Attraction with ID ${id} not found`);
+        throw new NotFoundException(`Restaurant with ID ${id} not found`);
       }
     }
   }

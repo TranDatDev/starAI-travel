@@ -241,6 +241,26 @@ export class AttractionService {
     return updatedAttraction;
   }
 
+  async updateDescriptionByLanguage(
+    id: string,
+    lang: string,
+    value: string,
+  ): Promise<Attraction> {
+    const updatedAttraction = await this.attractionModel
+      .findByIdAndUpdate(
+        id,
+        { $set: { [`description.${lang}`]: value } },
+        { new: true },
+      )
+      .select('description');
+
+    if (!updatedAttraction) {
+      throw new NotFoundException(`Attraction with ID ${id} not found`);
+    }
+
+    return updatedAttraction;
+  }
+
   async remove(id: string, type: 'soft' | 'hard' = 'soft'): Promise<void> {
     if (type === 'soft') {
       const result = await this.attractionModel

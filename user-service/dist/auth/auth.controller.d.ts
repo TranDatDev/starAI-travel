@@ -10,6 +10,8 @@ export declare class AuthController {
     }): Promise<{
         access_token: string;
         id: any;
+        language: any;
+        theme: any;
     }>;
     register(body: {
         email: string;
@@ -17,5 +19,7 @@ export declare class AuthController {
     }): Promise<{
         access_token: string;
         id: any;
+        language: any;
+        theme: any;
     }>;
 }

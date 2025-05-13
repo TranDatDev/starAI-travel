@@ -29,6 +29,10 @@ import { Restaurant } from './schemas/restaurant.schema';
 import { RestaurantFilterDto } from './dto/restaurant-filter.dto';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/role.guard';
+import { Roles } from 'src/auth/role.decorator';
+import { UseGuards } from '@nestjs/common/decorators/core/use-guards.decorator';
 @ApiTags('API nội bộ: Nhà hàng')
 @Controller({ path: '/private/restaurant', version: '1' })
 export class RestaurantPrivateController {
@@ -37,6 +41,8 @@ export class RestaurantPrivateController {
     private readonly supabaseService: SupabaseService,
   ) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Tạo mới một nhà hàng' })
   @ApiResponse({
@@ -48,6 +54,8 @@ export class RestaurantPrivateController {
     return this.restaurantService.create(data);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Lấy danh sách nhà hàng (kèm bộ lọc)' })
   @ApiResponse({
@@ -59,6 +67,8 @@ export class RestaurantPrivateController {
     return this.restaurantService.findAllByAdmin(filterDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get(':id')
   @ApiOperation({ summary: 'Lấy chi tiết một nhà hàng theo ID' })
   @ApiParam({
@@ -79,6 +89,8 @@ export class RestaurantPrivateController {
     return restaurant;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Cập nhật thông tin nhà hàng' })
   @ApiParam({
@@ -98,6 +110,23 @@ export class RestaurantPrivateController {
     return this.restaurantService.update(id, data);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Patch(':id/description')
+  async updateDescriptionByLanguage(
+    @Param('id') id: string,
+    @Query('lang') lang: string,
+    @Body('description') description: string,
+  ) {
+    return this.restaurantService.updateDescriptionByLanguage(
+      id,
+      lang,
+      description,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   @ApiOperation({ summary: 'Xoá một nhà hàng theo ID' })
   @ApiParam({
@@ -120,6 +149,8 @@ export class RestaurantPrivateController {
     };
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post(':shortId/upload-image')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload ảnh cho nhà hàng' })

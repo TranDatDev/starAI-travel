@@ -26,7 +26,13 @@ let JwtStrategy = JwtStrategy_1 = class JwtStrategy extends (0, passport_1.Passp
     }
     async validate(payload) {
         this.logger.debug(`Validating payload: ${JSON.stringify(payload)}`);
-        return { id: payload.sub, email: payload.email, role: payload.role };
+        return {
+            id: payload.sub,
+            email: payload.email,
+            role: payload.role,
+            theme: payload.theme,
+            language: payload.language,
+        };
     }
 };
 exports.JwtStrategy = JwtStrategy;

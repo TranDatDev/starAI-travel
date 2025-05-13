@@ -5,7 +5,37 @@ import AnimatedBox from '@/components/AnimatedBox';
 import NavigationAuthService from '@/components/NavigationAuthService';
 import NavigationGeneralService from '@/components/NavigationGeneralService';
 import RightSideBarToggle from '@/components/RightSideBarToggle';
+import { useAuth } from '@/contexts/AuthContext';
+import { useEffect, useState } from 'react';
+import { getUserAvatarById } from '@/services/user/userService';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useNavigate } from 'react-router';
 const DefaultLayout = (props: Props) => {
+    const { isAuthenticated, userId, logout } = useAuth();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            const fetchAvatar = async () => {
+                try {
+                    const url = await getUserAvatarById(userId!);
+                    setAvatarUrl(url);
+                } catch (error) {
+                    console.error('Failed to fetch avatar:', error);
+                }
+            };
+            fetchAvatar();
+        }
+    }, [isAuthenticated]);
+    const navigate = useNavigate();
     return (
         <AnimatedBox>
             <div className="mb-10">
@@ -16,7 +46,36 @@ const DefaultLayout = (props: Props) => {
                         <NavigationGeneralService />
                     </div>
                     <div className="hidden lg:block">
-                        <NavigationAuthService />
+                        {isAuthenticated ? (
+                            <div className="flex items-center">
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger className="flex items-center">
+                                        <Avatar>
+                                            <AvatarImage src={avatarUrl || '/avatar'} />
+                                            <AvatarFallback>U</AvatarFallback>
+                                        </Avatar>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-56">
+                                        <DropdownMenuLabel>User Menu</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem
+                                            onClick={() => {
+                                                if (userId) {
+                                                    navigate(`/user/${userId}`);
+                                                }
+                                            }}
+                                        >
+                                            Account
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={logout} className="text-red-500">
+                                            Logout
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        ) : (
+                            <NavigationAuthService />
+                        )}
                     </div>
                 </header>
                 <main>

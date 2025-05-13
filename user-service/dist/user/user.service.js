@@ -101,6 +101,8 @@ let UserService = class UserService {
                 email: true,
                 password: true,
                 role: true,
+                theme: true,
+                language: true,
             },
         });
     }
@@ -163,6 +165,27 @@ let UserService = class UserService {
             data: { avatar: avatarUrl },
         });
         return { avatarUrl };
+    }
+    async getUserAvatarById(id) {
+        const user = await this.prisma.user.findUnique({
+            where: { id },
+            select: { avatar: true },
+        });
+        return user?.avatar || null;
+    }
+    async updateTheme(id, theme) {
+        return this.prisma.user.update({
+            where: { id },
+            data: { theme },
+            select: { theme: true },
+        });
+    }
+    async updateLanguage(id, language) {
+        return this.prisma.user.update({
+            where: { id },
+            data: { language },
+            select: { language: true },
+        });
     }
 };
 exports.UserService = UserService;

@@ -2,7 +2,7 @@ import { locationApi } from '@/services/api';
 
 export const fetchProvinces = async (): Promise<string[]> => {
     try {
-        const response = await locationApi.get('/location/provinces');
+        const response = await locationApi.get('/api/v1/public/location/provinces');
         return response.data;
     } catch (error) {
         console.error('Error fetching provinces:', error);
@@ -12,7 +12,7 @@ export const fetchProvinces = async (): Promise<string[]> => {
 
 export const fetchDistricts = async (by?: string): Promise<string[]> => {
     try {
-        const response = await locationApi.get('/location/districts', {
+        const response = await locationApi.get('/api/v1/public/location/districts', {
             params: by ? { by } : {},
         });
         return response.data;
@@ -24,7 +24,7 @@ export const fetchDistricts = async (by?: string): Promise<string[]> => {
 
 export const fetchCommunes = async (by?: string): Promise<string[]> => {
     try {
-        const response = await locationApi.get('/location/communes', {
+        const response = await locationApi.get('/api/v1/public/location/communes', {
             params: by ? { by } : {},
         });
         return response.data;

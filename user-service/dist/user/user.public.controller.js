@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserPublicController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
+const route_params_decorator_1 = require("@nestjs/common/decorators/http/route-params.decorator");
 const swagger_1 = require("@nestjs/swagger");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const use_guards_decorator_1 = require("@nestjs/common/decorators/core/use-guards.decorator");
@@ -39,6 +40,14 @@ let UserPublicController = UserPublicController_1 = class UserPublicController {
         this.logger.log(`Updating user ${id}`);
         return this.userService.update(id, dto);
     }
+    updateTheme(id, theme) {
+        this.logger.log(`Updating theme for user ${id} to ${theme}`);
+        return this.userService.updateTheme(id, theme);
+    }
+    updateLanguage(id, language) {
+        this.logger.log(`Updating language for user ${id} to ${language}`);
+        return this.userService.updateLanguage(id, language);
+    }
     async uploadAvatar(id, file) {
         if (!file) {
             throw new common_1.BadRequestException('File is missing or invalid');
@@ -50,6 +59,14 @@ let UserPublicController = UserPublicController_1 = class UserPublicController {
         catch (error) {
             throw new common_1.BadRequestException(error.message || 'Failed to upload avatar');
         }
+    }
+    async getUserAvatarById(id) {
+        this.logger.log(`User ${id} is fetching their avatar`);
+        const avatarUrl = await this.userService.getUserAvatarById(id);
+        if (!avatarUrl) {
+            throw new common_1.BadRequestException('Avatar not found');
+        }
+        return { avatarUrl };
     }
     async requestPartner(userId, dto) {
         return this.userService.requestPartnerRole(userId, dto.organization, dto.licenseNumber);
@@ -85,8 +102,28 @@ __decorate([
 __decorate([
     (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
     (0, role_decorator_1.Roles)('USER', 'PARTNER'),
+    (0, common_1.Patch)(':id/theme'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, route_params_decorator_1.Query)('update')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], UserPublicController.prototype, "updateTheme", null);
+__decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
+    (0, role_decorator_1.Roles)('USER', 'PARTNER'),
+    (0, common_1.Patch)(':id/language'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, route_params_decorator_1.Query)('update')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], UserPublicController.prototype, "updateLanguage", null);
+__decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
+    (0, role_decorator_1.Roles)('USER', 'PARTNER'),
     (0, common_1.Patch)(':id/avatar'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar')),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, description: 'User ID' }),
     (0, swagger_1.ApiConsumes)('multipart/form-data'),
     (0, swagger_1.ApiBody)({
@@ -109,6 +146,15 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], UserPublicController.prototype, "uploadAvatar", null);
+__decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
+    (0, role_decorator_1.Roles)('USER', 'PARTNER'),
+    (0, common_1.Get)(':id/avatar'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserPublicController.prototype, "getUserAvatarById", null);
 __decorate([
     (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard, ownership_guard_1.OwnershipGuard),
     (0, role_decorator_1.Roles)('USER'),

@@ -12,7 +12,10 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Req } from '@nestjs/common/decorators/http/route-params.decorator';
+import {
+  Query,
+  Req,
+} from '@nestjs/common/decorators/http/route-params.decorator';
 import {
   ApiTags,
   ApiParam,
@@ -61,8 +64,24 @@ export class UserPublicController {
 
   @UseGuards(JwtAuthGuard, RolesGuard, OwnershipGuard)
   @Roles('USER', 'PARTNER')
+  @Patch(':id/theme')
+  updateTheme(@Param('id') id: string, @Query('update') theme: string) {
+    this.logger.log(`Updating theme for user ${id} to ${theme}`);
+    return this.userService.updateTheme(id, theme);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard, OwnershipGuard)
+  @Roles('USER', 'PARTNER')
+  @Patch(':id/language')
+  updateLanguage(@Param('id') id: string, @Query('update') language: string) {
+    this.logger.log(`Updating language for user ${id} to ${language}`);
+    return this.userService.updateLanguage(id, language);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard, OwnershipGuard)
+  @Roles('USER', 'PARTNER')
   @Patch(':id/avatar')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('avatar'))
   @ApiParam({ name: 'id', type: String, description: 'User ID' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -94,6 +113,18 @@ export class UserPublicController {
     } catch (error) {
       throw new BadRequestException(error.message || 'Failed to upload avatar');
     }
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard, OwnershipGuard)
+  @Roles('USER', 'PARTNER')
+  @Get(':id/avatar')
+  async getUserAvatarById(@Param('id') id: string) {
+    this.logger.log(`User ${id} is fetching their avatar`);
+    const avatarUrl = await this.userService.getUserAvatarById(id);
+    if (!avatarUrl) {
+      throw new BadRequestException('Avatar not found');
+    }
+    return { avatarUrl };
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard, OwnershipGuard)

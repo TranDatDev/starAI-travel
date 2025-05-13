@@ -29,6 +29,10 @@ import { Attraction } from './schemas/attraction.schema';
 import { AttractionFilterDto } from './dto/attraction-filter.dto';
 import { CreateAttractionDto } from './dto/create-attraction.dto';
 import { UpdateAttractionDto } from './dto/update-attraction.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/role.guard';
+import { Roles } from 'src/auth/role.decorator';
+import { UseGuards } from '@nestjs/common/decorators/core/use-guards.decorator';
 @ApiTags('API nội bộ: Điểm du lịch')
 @Controller({ path: '/private/attraction', version: '1' })
 export class AttractionPrivateController {
@@ -37,6 +41,8 @@ export class AttractionPrivateController {
     private readonly supabaseService: SupabaseService,
   ) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Tạo mới một điểm du lịch' })
   @ApiResponse({
@@ -48,6 +54,8 @@ export class AttractionPrivateController {
     return this.attractionService.create(data);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Lấy danh sách điểm du lịch (kèm bộ lọc)' })
   @ApiResponse({
@@ -59,6 +67,8 @@ export class AttractionPrivateController {
     return this.attractionService.findAllByAdmin(filterDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get(':id')
   @ApiOperation({ summary: 'Lấy chi tiết một điểm du lịch theo ID' })
   @ApiParam({
@@ -79,6 +89,8 @@ export class AttractionPrivateController {
     return attraction;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Cập nhật thông tin điểm du lịch' })
   @ApiParam({
@@ -98,6 +110,23 @@ export class AttractionPrivateController {
     return this.attractionService.update(id, data);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Patch(':id/description')
+  async updateDescriptionByLanguage(
+    @Param('id') id: string,
+    @Query('lang') lang: string,
+    @Body('description') description: string,
+  ) {
+    return this.attractionService.updateDescriptionByLanguage(
+      id,
+      lang,
+      description,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   @ApiOperation({ summary: 'Xoá một địa điểm du lịch theo ID' })
   @ApiParam({
@@ -120,6 +149,8 @@ export class AttractionPrivateController {
     };
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post(':shortId/upload-image')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload ảnh cho điểm du lịch' })

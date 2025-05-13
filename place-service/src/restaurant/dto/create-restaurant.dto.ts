@@ -11,91 +11,113 @@ import {
 } from 'class-validator';
 import { Types } from 'mongoose';
 import { Type } from 'class-transformer';
-
-export class CoordinatesDto {
-  @IsIn(['Point'])
-  type: 'Point';
-
-  @IsArray()
-  @Type(() => Number)
-  coordinates: [number, number];
-}
-
+import { LocalizedDescriptionDto } from 'src/shared/dto/localizedDescriptionDto';
+import { CoordinatesDto } from 'src/shared/dto/coordinatesDto';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class CreateRestaurantDto {
+  @ApiProperty()
   @IsString()
   name: string;
 
+  @ApiPropertyOptional({ type: LocalizedDescriptionDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => LocalizedDescriptionDto)
+  description?: LocalizedDescriptionDto;
+
+  @ApiProperty()
   @IsString()
   address: string;
 
-  @IsString()
-  category: string;
-
-  @IsNumber()
-  minPrice: number;
-
-  @IsNumber()
-  maxPrice: number;
-
+  @ApiPropertyOptional({ type: [String] })
   @IsOptional()
-  communeId?: Types.ObjectId;
+  @IsArray()
+  @IsString({ each: true })
+  tags?: string[];
 
-  @ValidateNested()
-  @Type(() => CoordinatesDto)
-  coordinates: CoordinatesDto;
-
-  @IsOptional()
-  @IsBoolean()
-  isAvailable?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  isFeatured?: boolean;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
-  ManagerId?: string;
-
+  @ApiPropertyOptional({ type: [String] })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   images?: string[];
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   officialRating?: number;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  userRating?: number;
+  reviewsTotal?: number;
 
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   reviewsCount?: number;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsPhoneNumber('VN')
+  contactPhone?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsEmail()
+  contactEmail?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isAvailable?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  cuisines?: string[];
+  openingHours?: string[];
 
+  @ApiProperty()
+  @IsString()
+  website: string;
+
+  @ApiPropertyOptional({ type: [String] })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   amenities?: string[];
 
   @IsOptional()
-  @IsPhoneNumber('VN')
-  contactPhone?: string;
-
-  @IsOptional()
-  @IsEmail()
-  contactEmail?: string;
-
-  @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  tags?: string[];
+  cuisines?: string[];
+
+  @ApiProperty()
+  @IsNumber()
+  minPrice: number;
+
+  @ApiProperty()
+  @IsNumber()
+  maxPrice: number;
+
+  @ApiProperty({ type: CoordinatesDto })
+  @ValidateNested()
+  @Type(() => CoordinatesDto)
+  coordinates: CoordinatesDto;
+
+  @ApiProperty()
+  @IsString()
+  category: string;
+
+  @ApiProperty()
+  @IsString()
+  adminId: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  communeId: Types.ObjectId;
 }

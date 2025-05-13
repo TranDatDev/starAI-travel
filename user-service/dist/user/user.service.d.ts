@@ -93,6 +93,8 @@ export declare class UserService {
         email: string;
         password: string;
         id: string;
+        language: string | null;
+        theme: string | null;
         role: import("../../generated/prisma").$Enums.Role;
     } | null>;
     getAllRequestPartnerFromUserByManager(status: string): Promise<{
@@ -118,5 +120,12 @@ export declare class UserService {
     }>;
     updateAvatar(userId: string, file: Express.Multer.File): Promise<{
         avatarUrl: string;
+    }>;
+    getUserAvatarById(id: string): Promise<string | null>;
+    updateTheme(id: string, theme: string): Promise<{
+        theme: string | null;
+    }>;
+    updateLanguage(id: string, language: string): Promise<{
+        language: string | null;
     }>;
 }

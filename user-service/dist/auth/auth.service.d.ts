@@ -10,11 +10,15 @@ export declare class AuthService {
     validateUser(email: string, password: string, superkey?: string, adminkey?: string): Promise<{
         email: string;
         id: string;
+        language: string | null;
+        theme: string | null;
         role: import("generated/prisma").$Enums.Role;
     }>;
     login(user: any): Promise<{
         access_token: string;
         id: any;
+        language: any;
+        theme: any;
     }>;
     register(data: {
         email: string;
@@ -22,5 +26,7 @@ export declare class AuthService {
     }): Promise<{
         access_token: string;
         id: any;
+        language: any;
+        theme: any;
     }>;
 }
