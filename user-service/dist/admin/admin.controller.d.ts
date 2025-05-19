@@ -5,6 +5,56 @@ export declare class AdminController {
     private readonly managerService;
     private readonly adminService;
     constructor(managerService: ManagerService, adminService: AdminService);
+    getAllManagers(): Promise<({
+        profile: {
+            id: string;
+            bio: string | null;
+            birthday: Date | null;
+            gender: string | null;
+            location: string | null;
+            userId: string;
+        } | null;
+    } & {
+        name: string | null;
+        email: string;
+        password: string;
+        id: string;
+        phoneNumber: string | null;
+        avatar: string | null;
+        language: string | null;
+        theme: string | null;
+        isBanned: boolean;
+        isDeleted: boolean;
+        isVerified: boolean;
+        role: import("../../generated/prisma").$Enums.Role;
+        createdAt: Date;
+        updatedAt: Date;
+    })[]>;
+    getManagerById(id: string): Promise<({
+        profile: {
+            id: string;
+            bio: string | null;
+            birthday: Date | null;
+            gender: string | null;
+            location: string | null;
+            userId: string;
+        } | null;
+    } & {
+        name: string | null;
+        email: string;
+        password: string;
+        id: string;
+        phoneNumber: string | null;
+        avatar: string | null;
+        language: string | null;
+        theme: string | null;
+        isBanned: boolean;
+        isDeleted: boolean;
+        isVerified: boolean;
+        role: import("../../generated/prisma").$Enums.Role;
+        createdAt: Date;
+        updatedAt: Date;
+    }) | null>;
     createManager(dto: CreateManagerDto, req: any): Promise<{
         profile: {
             id: string;

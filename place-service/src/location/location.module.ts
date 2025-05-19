@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LocationService } from './location.service';
-import { LocationController } from './location.public.controller';
 import { Province, ProvinceSchema } from './schemas/province.schema';
 import { District, DistrictSchema } from './schemas/district.schema';
 import { Commune, CommuneSchema } from './schemas/commune.schema';
+import { LocationPublicController } from './location.public.controller';
+import { LocationPrivateController } from './location.private.controller';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -13,7 +14,7 @@ import { Commune, CommuneSchema } from './schemas/commune.schema';
       { name: Commune.name, schema: CommuneSchema },
     ]),
   ],
-  controllers: [LocationController],
+  controllers: [LocationPublicController, LocationPrivateController],
   providers: [LocationService],
 })
 export class LocationModule {}

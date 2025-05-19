@@ -66,9 +66,9 @@ const UserDetail = () => {
     return (
         <div>
             {userDetail ? (
-                <div>
-                    <Card className="w-[450px]">
-                        <AspectRatio ratio={1 / 1}>
+                <div className="flex justify-between gap-4">
+                    <Card className="w-[25vw]">
+                        <AspectRatio ratio={1 / 1} className="flex items-center justify-center">
                             <img
                                 src={userDetail.avatar}
                                 alt="Image"
@@ -79,6 +79,10 @@ const UserDetail = () => {
                             <DialogTrigger asChild>
                                 <Button variant="outline">Đổi ảnh đại diện</Button>
                             </DialogTrigger>
+                            <Button variant="outline">Vô hiệu hóa tài khoản</Button>
+                            <Button variant="outline">Lịch sử tài khoản</Button>
+                            <Button variant="outline">Yêu cầu đối tác</Button>
+                            <Button variant="outline">Cập nhật thông tin</Button>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
                                     <DialogTitle>Đổi ảnh đại diện</DialogTitle>
@@ -108,18 +112,16 @@ const UserDetail = () => {
                         </Dialog>
                     </Card>
 
-                    <Card>
+                    <Card className="w-[75vw]">
                         <CardHeader>
                             <CardTitle>{userDetail.name}</CardTitle>
                             <CardDescription>{userDetail.email}</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <p>Bio: {userDetail.bio}</p>
-                            <p>Joined: {new Date(userDetail.createdAt).toLocaleDateString()}</p>
+                            <div>Tên: Trần Thành Đạt</div>
+                            <div>Ngày sinh: 2000-01-01</div>
+                            <div>Giới tính: Nam</div>
                         </CardContent>
-                        <CardFooter>
-                            <button onClick={() => alert('Followed!')}>Follow</button>
-                        </CardFooter>
                     </Card>
                 </div>
             ) : (

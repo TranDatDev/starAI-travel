@@ -212,12 +212,80 @@ export class RestaurantService {
     };
   }
 
-  async findOne(id: string): Promise<Restaurant> {
-    const restaurant = await this.restaurantModel.findById(id).exec();
-    if (!restaurant) {
+  async findOne(id: string): Promise<any> {
+    const result = await this.restaurantModel
+      .aggregate([
+        {
+          $match: { _id: id },
+        },
+        {
+          $lookup: {
+            from: 'communes',
+            localField: 'communeId',
+            foreignField: 'shortId',
+            as: 'commune',
+          },
+        },
+        { $unwind: { path: '$commune', preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: 'districts',
+            localField: 'commune.districtId',
+            foreignField: '_id',
+            as: 'district',
+          },
+        },
+        { $unwind: { path: '$district', preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: 'provinces',
+            localField: 'district.provinceId',
+            foreignField: '_id',
+            as: 'province',
+          },
+        },
+        { $unwind: { path: '$province', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            name: 1,
+            description: 1,
+            category: 1,
+            minPrice: 1,
+            maxPrice: 1,
+            images: 1,
+            maxGuests: 1,
+            maxRooms: 1,
+            officialRating: 1,
+            userRating: 1,
+            reviewsCount: 1,
+            amenities: 1,
+            contactPhone: 1,
+            contactEmail: 1,
+            isAvailable: 1,
+            isFeatured: 1,
+            tags: 1,
+            website: 1,
+            openingHours: 1,
+            fullAddress: {
+              $concat: [
+                '$address',
+                ', ',
+                { $ifNull: ['$commune.fullName', ''] },
+                ', ',
+                { $ifNull: ['$district.fullName', ''] },
+                ', ',
+                { $ifNull: ['$province.fullName', ''] },
+              ],
+            },
+          },
+        },
+      ])
+      .exec();
+
+    if (!result || result.length === 0) {
       throw new NotFoundException(`Restaurant with ID ${id} not found`);
     }
-    return restaurant;
+    return result[0];
   }
 
   async findByShortId(shortId: string): Promise<any> {

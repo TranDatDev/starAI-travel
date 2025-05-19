@@ -1,6 +1,3 @@
-import React from 'react';
-
-interface Props {}
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -10,7 +7,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-const NavigationAuthService = (props: Props) => {
+const NavigationAuthService = () => {
     const { t } = useTranslation();
     return (
         <div>

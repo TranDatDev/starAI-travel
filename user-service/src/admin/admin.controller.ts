@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { Body, Post } from '@nestjs/common/decorators';
+import { Body, Get, Post, Param } from '@nestjs/common/decorators';
 import { ManagerService } from '../manager/manager.service';
 import { CreateManagerDto } from '../manager/dto/create-manager.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -15,6 +15,20 @@ export class AdminController {
     private readonly managerService: ManagerService,
     private readonly adminService: AdminService,
   ) {}
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Get('manager')
+  async getAllManagers() {
+    return this.managerService.getAllManagers();
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Get('manager/:id')
+  async getManagerById(@Param('id') id: string) {
+    return this.managerService.getManagerById(id);
+  }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post('create-manager')

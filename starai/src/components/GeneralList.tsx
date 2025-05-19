@@ -221,12 +221,12 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                     onChange={(e) => setSearch(e.target.value)}
                 />
                 <Input
-                    placeholder="Min price"
+                    placeholder="Giá thấp nhất"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
                 />
                 <Input
-                    placeholder="Max price"
+                    placeholder="Giá cao nhất"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
                 />
@@ -287,7 +287,7 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                             id="isFeatured"
                             className="mr-2"
                         />
-                        <label htmlFor="isFeatured">{t('filter.isFeatured')}</label>
+                        <label htmlFor="isFeatured">Nổi bật</label>
                     </div>
 
                     {/* isAvailable Filter */}
@@ -299,7 +299,7 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                             id="isAvailable"
                             className="mr-2"
                         />
-                        <label htmlFor="isAvailable">{t('filter.isAvailable')}</label>
+                        <label htmlFor="isAvailable">Còn hoạt động</label>
                     </div>
                 </div>
                 <Button onClick={handleSearch}>Tìm kiếm</Button>

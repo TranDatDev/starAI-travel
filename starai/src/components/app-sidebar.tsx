@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
     Sidebar,
     SidebarContent,
@@ -8,9 +6,7 @@ import {
     SidebarHeader,
 } from '@/components/ui/sidebar';
 
-interface Props {}
-
-const AppSidebar = (props: Props) => {
+const AppSidebar = () => {
     return (
         <div>
             <Sidebar>

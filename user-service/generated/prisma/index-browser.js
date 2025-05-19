@@ -179,6 +179,17 @@ exports.Prisma.StaffScalarFieldEnum = {
   phoneNumber: 'phoneNumber'
 };
 
+exports.Prisma.ReviewServiceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  serviceId: 'serviceId',
+  service: 'service',
+  reviewStars: 'reviewStars',
+  comment: 'comment',
+  reviewedAt: 'reviewedAt',
+  metadata: 'metadata'
+};
+
 exports.Prisma.UserHistoryScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -291,6 +302,13 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.ReviewServiceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  serviceId: 'serviceId',
+  comment: 'comment'
+};
+
 exports.Prisma.UserHistoryOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -367,6 +385,7 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   PartnerInfo: 'PartnerInfo',
   Staff: 'Staff',
+  ReviewService: 'ReviewService',
   UserHistory: 'UserHistory',
   ManagerHistory: 'ManagerHistory',
   AdminHistory: 'AdminHistory'

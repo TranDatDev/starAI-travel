@@ -95,7 +95,22 @@ export class LocationService {
   }
 
   async getDistricts(): Promise<GetDistrictDto[]> {
-    const districts = await this.districtModel.find().exec();
+    const districts = await this.districtModel.find().limit(20).exec();
+    return districts.map((district) => ({
+      shortId: district.shortId,
+      fullName: district.fullName || '',
+    }));
+  }
+  async getDistrictsByProvinceShortId(
+    shortId: string,
+  ): Promise<GetDistrictDto[]> {
+    const province = await this.provinceModel.findOne({ shortId }).exec();
+    if (!province) {
+      throw new NotFoundException('Province not found');
+    }
+    const districts = await this.districtModel
+      .find({ provinceId: province._id })
+      .exec();
     return districts.map((district) => ({
       shortId: district.shortId,
       fullName: district.fullName || '',
@@ -103,7 +118,23 @@ export class LocationService {
   }
 
   async getCommunes(): Promise<GetCommuneDto[]> {
-    const communes = await this.communeModel.find().exec();
+    const communes = await this.communeModel.find().limit(20).exec();
+    return communes.map((commune) => ({
+      shortId: commune.shortId,
+      fullName: commune.fullName || '',
+    }));
+  }
+
+  async getCommunesByDistrictShortId(
+    shortId: string,
+  ): Promise<GetCommuneDto[]> {
+    const district = await this.districtModel.findOne({ shortId }).exec();
+    if (!district) {
+      throw new NotFoundException('District not found');
+    }
+    const communes = await this.communeModel
+      .find({ districtId: district._id })
+      .exec();
     return communes.map((commune) => ({
       shortId: commune.shortId,
       fullName: commune.fullName || '',

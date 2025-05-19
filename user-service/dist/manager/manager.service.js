@@ -20,6 +20,47 @@ let ManagerService = class ManagerService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async getAllManagers() {
+        return this.prisma.user.findMany({
+            where: { role: 'MANAGER' },
+            include: {
+                profile: true,
+            },
+        });
+    }
+    async getManagerById(id) {
+        return this.prisma.user.findUnique({
+            where: { id },
+            include: {
+                profile: true,
+            },
+        });
+    }
+    async updateManagerById(id, data) {
+        if (data.password) {
+            data.password = await bcrypt.hash(data.password, 10);
+        }
+        return this.prisma.user.update({
+            where: { id },
+            data: {
+                email: data.email,
+                password: data.password,
+                profile: data.bio || data.birthday || data.gender || data.location
+                    ? {
+                        update: {
+                            bio: data.bio,
+                            birthday: data.birthday,
+                            gender: data.gender,
+                            location: data.location,
+                        },
+                    }
+                    : undefined,
+            },
+            include: {
+                profile: true,
+            },
+        });
+    }
     async createManager(dto) {
         const id = (0, nanoid_1.nanoid)(8);
         const profileId = (0, nanoid_1.nanoid)(8);

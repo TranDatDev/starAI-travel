@@ -4,7 +4,7 @@ import { ApiOperation, ApiQuery, ApiTags, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('API công cộng: Vị trí hành chính')
 @Controller({ path: '/public/location', version: '1' })
-export class LocationController {
+export class LocationPublicController {
   constructor(private readonly locationService: LocationService) {}
 
   @Get('/provinces')

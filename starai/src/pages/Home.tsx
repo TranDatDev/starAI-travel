@@ -1,8 +1,5 @@
-import React from 'react';
-import { fetchAccommodationsByFilter } from '@/services/general/accommodationService';
-interface Props {}
 import { useTranslation } from 'react-i18next';
-const Home = (props: Props) => {
+const Home = () => {
     const { t } = useTranslation();
     return (
         <div>

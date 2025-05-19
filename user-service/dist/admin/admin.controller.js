@@ -31,6 +31,12 @@ let AdminController = class AdminController {
         this.managerService = managerService;
         this.adminService = adminService;
     }
+    async getAllManagers() {
+        return this.managerService.getAllManagers();
+    }
+    async getManagerById(id) {
+        return this.managerService.getManagerById(id);
+    }
     async createManager(dto, req) {
         const result = await this.managerService.createManager(dto);
         await this.adminService.logAdminAction({
@@ -44,6 +50,23 @@ let AdminController = class AdminController {
     }
 };
 exports.AdminController = AdminController;
+__decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard),
+    (0, role_decorator_1.Roles)('ADMIN'),
+    (0, decorators_1.Get)('manager'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getAllManagers", null);
+__decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard),
+    (0, role_decorator_1.Roles)('ADMIN'),
+    (0, decorators_1.Get)('manager/:id'),
+    __param(0, (0, decorators_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getManagerById", null);
 __decorate([
     (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard),
     (0, role_decorator_1.Roles)('ADMIN'),

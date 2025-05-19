@@ -1,5 +1,3 @@
-import React from 'react';
-interface Props {}
 import { Outlet } from 'react-router';
 import AnimatedBox from '@/components/AnimatedBox';
 import NavigationAuthService from '@/components/NavigationAuthService';
@@ -18,7 +16,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router';
-const DefaultLayout = (props: Props) => {
+const DefaultLayout = () => {
     const { isAuthenticated, userId, logout } = useAuth();
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 

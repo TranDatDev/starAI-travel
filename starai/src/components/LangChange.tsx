@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     DropdownMenu,
@@ -16,7 +15,7 @@ type Props = {};
 
 export default function LangChange({}: Props) {
     const { t, i18n } = useTranslation();
-    const { updateLanguage, language } = useAuth();
+    const { updateLanguage } = useAuth();
     const currentLanguage = i18n.language;
     const changeLanguage = async (lng: string) => {
         if (lng === currentLanguage) return;

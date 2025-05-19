@@ -1,10 +1,8 @@
-import React from 'react';
 import { useState } from 'react';
 import RightSidebar from '@/components/RightSideBar';
 import { Icon } from '@iconify/react';
-interface Props {}
 
-const RightSideBarToggle = (props: Props) => {
+const RightSideBarToggle = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     return (
         <div className="lg:hidden">

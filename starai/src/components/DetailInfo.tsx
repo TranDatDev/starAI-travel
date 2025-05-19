@@ -5,14 +5,6 @@ import { useReactToPrint } from 'react-to-print';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import StarRatingOfficial from './StarRatingOfficial';
 import StarRatingUser from './StarRatingUser';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import CardSingleDetail from './CardSingleDetail';
 import { Icon } from '@iconify/react';
 import { useTranslation } from 'react-i18next';

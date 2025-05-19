@@ -17,6 +17,7 @@
         "home": "Trang chủ",
         "login": "Đăng nhập",
         "register": "Đăng ký",
+        "post": "Bài đăng",
         "accommodation": "Cơ sở lưu trú",
         "attraction": "Địa điểm du lịch",
         "restaurant": "Nhà hàng"
@@ -29,6 +30,16 @@
         "title": "Cơ sở lưu trú",
         "no-results": "Không tìm thấy cơ sở lưu trú.",
         "has-results": "Đã tìm thấy {{count}} cơ sở lưu trú."
+    },
+    "attraction": {
+        "title": "Địa điểm du lịch",
+        "no-results": "Không tìm thấy địa điểm du lịch.",
+        "has-results": "Đã tìm thấy {{count}} địa điểm du lịch."
+    },
+    "restaurant": {
+        "title": "Nhà hàng",
+        "no-results": "Không tìm thấy nhà hàng.",
+        "has-results": "Đã tìm thấy {{count}} nhà hàng."
     },
     "currency": {
         "type": "VND",

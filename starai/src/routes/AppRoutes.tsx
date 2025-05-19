@@ -1,6 +1,4 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router';
-interface Props {}
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
@@ -11,7 +9,7 @@ import Restaurant from '@/pages/Explore/Restaurant';
 import DetailInfo from '@/components/DetailInfo';
 import PrivateRoute from '@/components/PrivateRoute';
 import UserDetail from '@/components/user/UserDetail';
-const AppRoutes = (props: Props) => {
+const AppRoutes = () => {
     return (
         <BrowserRouter>
             <Routes>

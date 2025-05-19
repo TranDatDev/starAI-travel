@@ -37,6 +37,7 @@ model User {
   managerLogs      ManagerHistory[] @relation("ManagerLogs")
   adminLogs        AdminHistory[]   @relation("AdminLogs")
   verifiedPartners PartnerInfo[]    @relation("VerifiedByAdmin")
+  reviewServices   ReviewService[]
 }
 
 model Profile {
@@ -89,6 +90,21 @@ model Staff {
   phoneNumber String
 
   partner PartnerInfo @relation(fields: [partnerId], references: [id])
+}
+
+model ReviewService {
+  id          String      @id @default("") @db.VarChar(8)
+  userId      String
+  serviceId   String      @db.VarChar(8)
+  service     ServiceType
+  reviewStars Int
+  comment     String?
+  reviewedAt  DateTime    @default(now())
+  metadata    Json?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, serviceId, service])
 }
 
 model UserHistory {

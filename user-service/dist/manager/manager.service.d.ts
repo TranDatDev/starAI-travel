@@ -4,6 +4,81 @@ import { ManagerAction, TargetType, HttpMethod } from '../../generated/prisma';
 export declare class ManagerService {
     private prisma;
     constructor(prisma: PrismaService);
+    getAllManagers(): Promise<({
+        profile: {
+            id: string;
+            bio: string | null;
+            birthday: Date | null;
+            gender: string | null;
+            location: string | null;
+            userId: string;
+        } | null;
+    } & {
+        name: string | null;
+        email: string;
+        password: string;
+        id: string;
+        phoneNumber: string | null;
+        avatar: string | null;
+        language: string | null;
+        theme: string | null;
+        isBanned: boolean;
+        isDeleted: boolean;
+        isVerified: boolean;
+        role: import("../../generated/prisma").$Enums.Role;
+        createdAt: Date;
+        updatedAt: Date;
+    })[]>;
+    getManagerById(id: string): Promise<({
+        profile: {
+            id: string;
+            bio: string | null;
+            birthday: Date | null;
+            gender: string | null;
+            location: string | null;
+            userId: string;
+        } | null;
+    } & {
+        name: string | null;
+        email: string;
+        password: string;
+        id: string;
+        phoneNumber: string | null;
+        avatar: string | null;
+        language: string | null;
+        theme: string | null;
+        isBanned: boolean;
+        isDeleted: boolean;
+        isVerified: boolean;
+        role: import("../../generated/prisma").$Enums.Role;
+        createdAt: Date;
+        updatedAt: Date;
+    }) | null>;
+    updateManagerById(id: string, data: Partial<CreateManagerDto>): Promise<{
+        profile: {
+            id: string;
+            bio: string | null;
+            birthday: Date | null;
+            gender: string | null;
+            location: string | null;
+            userId: string;
+        } | null;
+    } & {
+        name: string | null;
+        email: string;
+        password: string;
+        id: string;
+        phoneNumber: string | null;
+        avatar: string | null;
+        language: string | null;
+        theme: string | null;
+        isBanned: boolean;
+        isDeleted: boolean;
+        isVerified: boolean;
+        role: import("../../generated/prisma").$Enums.Role;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
     createManager(dto: CreateManagerDto): Promise<{
         profile: {
             id: string;

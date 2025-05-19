@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface RightSidebarProps {
     isOpen: boolean;
     onClose: () => void;

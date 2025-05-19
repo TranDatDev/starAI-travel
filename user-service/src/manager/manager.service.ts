@@ -14,6 +14,51 @@ import {
 export class ManagerService {
   constructor(private prisma: PrismaService) {}
 
+  async getAllManagers() {
+    return this.prisma.user.findMany({
+      where: { role: 'MANAGER' },
+      include: {
+        profile: true,
+      },
+    });
+  }
+
+  async getManagerById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: {
+        profile: true,
+      },
+    });
+  }
+
+  async updateManagerById(id: string, data: Partial<CreateManagerDto>) {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        email: data.email,
+        password: data.password,
+        profile:
+          data.bio || data.birthday || data.gender || data.location
+            ? {
+                update: {
+                  bio: data.bio,
+                  birthday: data.birthday,
+                  gender: data.gender,
+                  location: data.location,
+                },
+              }
+            : undefined,
+      },
+      include: {
+        profile: true,
+      },
+    });
+  }
+
   async createManager(dto: CreateManagerDto) {
     const id = nanoid(8);
     const profileId = nanoid(8);
