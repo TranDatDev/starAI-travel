@@ -8,8 +8,8 @@ export declare class AuthService {
     private readonly logger;
     constructor(userService: UserService, jwtService: JwtService, config: ConfigService);
     validateUser(email: string, password: string, superkey?: string, adminkey?: string): Promise<{
-        email: string;
         id: string;
+        email: string;
         language: string | null;
         theme: string | null;
         role: import("generated/prisma").$Enums.Role;

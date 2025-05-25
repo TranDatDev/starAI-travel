@@ -77,6 +77,8 @@ const formatName = (segment: string) => {
     const map: Record<string, string> = {
         manager: 'Quản trị viên',
         dashboard: 'Bảng điều khiển',
+        user: 'Người dùng',
+        partner: 'Đối tác',
     };
     return map[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);
 };

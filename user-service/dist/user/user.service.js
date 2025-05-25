@@ -187,6 +187,31 @@ let UserService = class UserService {
             select: { language: true },
         });
     }
+    async getAllUserByManager(page, limit) {
+        const skip = (page - 1) * limit;
+        const [data, total] = await Promise.all([
+            this.prisma.user.findMany({
+                skip,
+                take: limit,
+                where: {
+                    role: 'USER',
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    role: true,
+                    createdAt: true,
+                    updatedAt: true,
+                },
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.prisma.user.count({
+                where: { role: 'USER' },
+            }),
+        ]);
+        return { data, total };
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([

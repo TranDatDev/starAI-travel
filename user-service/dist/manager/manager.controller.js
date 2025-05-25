@@ -77,6 +77,21 @@ let ManagerController = class ManagerController {
             },
         });
     }
+    async getAllUserByManager(page = 1, limit = 10, req) {
+        this.managerService.logManagerAction({
+            managerId: req.user.id,
+            action: prisma_1.ManagerAction.MANAGE_USER,
+            targetType: 'USER',
+            description: `Manager ${req.user.id} is fetching all users with page ${page} and limit ${limit}`,
+            httpMethod: req.method,
+            httpUrl: req.originalUrl,
+            httpQuery: req.query,
+            httpParams: req.params,
+            httpBody: req.body,
+            httpHeaders: req.headers,
+        });
+        return await this.userService.getAllUserByManager(page, limit);
+    }
 };
 exports.ManagerController = ManagerController;
 __decorate([
@@ -110,6 +125,17 @@ __decorate([
     __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], ManagerController.prototype, "verifyPartnerRequest", null);
+__decorate([
+    (0, use_guards_decorator_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, role_guard_1.RolesGuard),
+    (0, role_decorator_1.Roles)('MANAGER', 'ADMIN'),
+    (0, decorators_1.Get)('/user'),
+    __param(0, (0, common_2.Query)('page')),
+    __param(1, (0, common_2.Query)('limit')),
+    __param(2, (0, decorators_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Object]),
+    __metadata("design:returntype", Promise)
+], ManagerController.prototype, "getAllUserByManager", null);
 exports.ManagerController = ManagerController = __decorate([
     (0, common_1.Controller)({ path: 'private/manager', version: '1' }),
     __metadata("design:paramtypes", [manager_service_1.ManagerService,

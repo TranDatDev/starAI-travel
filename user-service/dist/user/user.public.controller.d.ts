@@ -6,6 +6,12 @@ export declare class UserPublicController {
     private readonly logger;
     constructor(userService: UserService);
     getUserInfoById(id: string): import("generated/prisma").Prisma.Prisma__UserClient<{
+        name: string | null;
+        email: string;
+        phoneNumber: string | null;
+        avatar: string | null;
+        language: string | null;
+        theme: string | null;
         profile: {
             id: string;
             bio: string | null;
@@ -14,18 +20,12 @@ export declare class UserPublicController {
             location: string | null;
             userId: string;
         } | null;
-        name: string | null;
-        email: string;
-        phoneNumber: string | null;
-        avatar: string | null;
-        language: string | null;
-        theme: string | null;
     } | null, null, import("generated/prisma/runtime/library").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
     update(id: string, dto: UpdateUserPublicDto): Promise<{
+        id: string;
         name: string | null;
         email: string;
         password: string;
-        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;

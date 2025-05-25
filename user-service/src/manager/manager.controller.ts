@@ -86,4 +86,27 @@ export class ManagerController {
       },
     });
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('MANAGER', 'ADMIN')
+  @Get('/user')
+  async getAllUserByManager(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Req() req: any,
+  ) {
+    this.managerService.logManagerAction({
+      managerId: req.user.id,
+      action: ManagerAction.MANAGE_USER,
+      targetType: 'USER',
+      description: `Manager ${req.user.id} is fetching all users with page ${page} and limit ${limit}`,
+      httpMethod: req.method as HttpMethod,
+      httpUrl: req.originalUrl,
+      httpQuery: req.query,
+      httpParams: req.params,
+      httpBody: req.body,
+      httpHeaders: req.headers,
+    });
+    return await this.userService.getAllUserByManager(page, limit);
+  }
 }

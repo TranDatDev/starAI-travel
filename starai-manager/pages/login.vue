@@ -25,6 +25,7 @@
                 class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input
+                v-if="role === 'admin'"
                 v-model="adminkey"
                 type="password"
                 placeholder="Khóa 2"
@@ -67,6 +68,7 @@ const handleLogin = async () => {
             adminkey: adminkey.value,
             role: role.value,
         });
+        alert('Đăng nhập thành công!');
         navigateTo(`/${role.value}/dashboard`);
     } catch (error) {
         console.error('Đăng nhập thất bại:', error);
