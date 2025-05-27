@@ -216,17 +216,17 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
             {/* Filters */}
             <div className="flex flex-col lg:flex-row flex-wrap gap-4 mb-6">
                 <Input
-                    placeholder="Tìm kiếm từ khóa..."
+                    placeholder={t('filter.search.label')}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
                 <Input
-                    placeholder="Giá thấp nhất"
+                    placeholder={t('filter.min-price.label')}
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
                 />
                 <Input
-                    placeholder="Giá cao nhất"
+                    placeholder={t('filter.max-price.label')}
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
                 />
@@ -235,7 +235,7 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                     onValueChange={(v) => setSelectedProvince(generateSlug(v))}
                 >
                     <SelectTrigger>
-                        <SelectValue placeholder="Tỉnh/Thành" />
+                        <SelectValue placeholder={t('filter.province.label')} />
                     </SelectTrigger>
                     <SelectContent>
                         {provinces.map((p) => (
@@ -251,7 +251,7 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                     disabled={!districts.length}
                 >
                     <SelectTrigger>
-                        <SelectValue placeholder="Quận/Huyện" />
+                        <SelectValue placeholder={t('filter.district.label')} />
                     </SelectTrigger>
                     <SelectContent>
                         {districts.map((d) => (
@@ -267,7 +267,7 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                     disabled={!communes.length}
                 >
                     <SelectTrigger>
-                        <SelectValue placeholder="Phường/Xã" />
+                        <SelectValue placeholder={t('filter.commune.label')} />
                     </SelectTrigger>
                     <SelectContent>
                         {communes.map((c) => (
@@ -287,7 +287,7 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                             id="isFeatured"
                             className="mr-2"
                         />
-                        <label htmlFor="isFeatured">Nổi bật</label>
+                        <label htmlFor="isFeatured">{t('filter.isFeatured.label')}</label>
                     </div>
 
                     {/* isAvailable Filter */}
@@ -299,10 +299,10 @@ const GeneralList: React.FC<GeneralListProps> = ({ service }) => {
                             id="isAvailable"
                             className="mr-2"
                         />
-                        <label htmlFor="isAvailable">Còn hoạt động</label>
+                        <label htmlFor="isAvailable">{t('filter.isAvailable.label')}</label>
                     </div>
                 </div>
-                <Button onClick={handleSearch}>Tìm kiếm</Button>
+                <Button onClick={handleSearch}>{t('filter.find.label')}</Button>
             </div>
 
             {total !== null && (

@@ -30,9 +30,9 @@ export declare class ManagerController {
     }>;
     getAllUserByManager(page: number | undefined, limit: number | undefined, req: any): Promise<{
         data: {
-            id: string;
             name: string | null;
             email: string;
+            id: string;
             role: import("../../generated/prisma").$Enums.Role;
             createdAt: Date;
             updatedAt: Date;

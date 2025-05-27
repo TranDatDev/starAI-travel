@@ -70,12 +70,16 @@ let AuthService = AuthService_1 = class AuthService {
             language: user.language,
             theme: user.theme,
         };
-        return {
+        const response = {
             access_token: this.jwtService.sign(payload),
             id: user.id,
             language: user.language,
             theme: user.theme,
         };
+        if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
+            response.role = user.role;
+        }
+        return response;
     }
     async register(data) {
         const existing = await this.userService.findByEmail(data.email);

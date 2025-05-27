@@ -289,14 +289,83 @@ export class AttractionService {
     return result[0];
   }
 
-  async findByShortId(shortId: string): Promise<Attraction> {
-    const attraction = await this.attractionModel.findOne({ shortId }).exec();
-    if (!attraction) {
+  async findByShortId(shortId: string): Promise<any> {
+    const result = await this.attractionModel
+      .aggregate([
+        {
+          $match: { shortId },
+        },
+        {
+          $lookup: {
+            from: 'communes',
+            localField: 'communeId',
+            foreignField: 'shortId',
+            as: 'commune',
+          },
+        },
+        { $unwind: { path: '$commune', preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: 'districts',
+            localField: 'commune.districtId',
+            foreignField: '_id',
+            as: 'district',
+          },
+        },
+        { $unwind: { path: '$district', preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: 'provinces',
+            localField: 'district.provinceId',
+            foreignField: '_id',
+            as: 'province',
+          },
+        },
+        { $unwind: { path: '$province', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            name: 1,
+            description: 1,
+            category: 1,
+            minPrice: 1,
+            maxPrice: 1,
+            images: 1,
+            maxGuests: 1,
+            maxRooms: 1,
+            officialRating: 1,
+            userRating: 1,
+            reviewsCount: 1,
+            amenities: 1,
+            contactPhone: 1,
+            contactEmail: 1,
+            isAvailable: 1,
+            isFeatured: 1,
+            tags: 1,
+            policies: 1,
+            fullAddress: {
+              $concat: [
+                '$address',
+                ', ',
+                { $ifNull: ['$commune.fullName', ''] },
+                ', ',
+                { $ifNull: ['$district.fullName', ''] },
+                ', ',
+                { $ifNull: ['$province.fullName', ''] },
+              ],
+            },
+            _id: 0,
+          },
+        },
+      ])
+      .exec();
+
+    if (!result || result.length === 0) {
       throw new NotFoundException(
         `Attraction with shortId ${shortId} not found`,
       );
     }
-    return attraction;
+
+    return result[0];
   }
 
   async update(id: string, data: Partial<Attraction>): Promise<Attraction> {

@@ -9,6 +9,7 @@ import Restaurant from '@/pages/Explore/Restaurant';
 import DetailInfo from '@/components/DetailInfo';
 import PrivateRoute from '@/components/PrivateRoute';
 import UserDetail from '@/components/user/UserDetail';
+import PostPage from '@/pages/Explore/Post';
 const AppRoutes = () => {
     return (
         <BrowserRouter>
@@ -17,6 +18,7 @@ const AppRoutes = () => {
                 <Route path="register" element={<Register />} />
                 <Route path="/" element={<DefaultLayout />}>
                     <Route index element={<Home />} />
+                    <Route path="post" element={<PostPage />} />
                     <Route path="accommodation" element={<Accommodation />} />
                     <Route
                         path="accommodation/:id"

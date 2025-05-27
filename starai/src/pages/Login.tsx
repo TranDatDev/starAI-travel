@@ -15,7 +15,9 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import AnimatedBox from '@/components/AnimatedBox';
+import { useTranslation } from 'react-i18next';
 const Login = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { login: loginContext } = useAuth();
     const [email, setEmail] = useState('');
@@ -27,12 +29,18 @@ const Login = () => {
 
         try {
             const data = await login(email, password);
-            const { access_token: token, id: userId, language: language, theme: theme } = data;
-            loginContext(token, userId, language, theme);
+            const {
+                access_token: token,
+                id: userId,
+                language: language,
+                theme: theme,
+                role: role,
+            } = data;
+            loginContext(token, userId, role, language, theme);
             window.location.href = '/';
-            toast.success('Đăng nhập thành công!');
+            toast.success(t('authentication.login.login-success'));
         } catch (err) {
-            toast.error('Không đúng email hoặc mật khẩu');
+            toast.error('authentication.login.login-failure');
         }
     };
 
@@ -45,21 +53,21 @@ const Login = () => {
                             <div className="flex items-center justify-between">
                                 <h1 className="font-bold text-3xl py-4">STRARAI</h1>
                                 <Button variant="link" type="button" onClick={() => navigate('/')}>
-                                    Quay lại trang chủ
+                                    {t('authentication.return-home')}
                                     <Icon
                                         icon="material-symbols:arrow-back-ios-new"
                                         className="ml-2"
                                     />
                                 </Button>
                             </div>
-                            <CardTitle>Đăng nhập</CardTitle>
+                            <CardTitle>{t('authentication.login.title')}</CardTitle>
                             <CardDescription>
-                                Nhập thông tin xác thực của bạn ở dưới đây
+                                {t('authentication.login.description')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="py-2">
-                                <label>Email</label>
+                                <label>{t('authentication.login.email')}</label>
                                 <Input
                                     type="email"
                                     value={email}
@@ -67,7 +75,7 @@ const Login = () => {
                                 />
                             </div>
                             <div className="pt-2">
-                                <label>Password</label>
+                                <label>{t('authentication.login.password')}</label>
                                 <Input
                                     type="password"
                                     value={password}
@@ -76,7 +84,7 @@ const Login = () => {
                             </div>
                             <div className="flex items-center justify-end">
                                 <Button type="submit" className="my-4">
-                                    Đăng nhập
+                                    {t('authentication.login.button')}
                                 </Button>
                             </div>
                         </CardContent>
@@ -87,7 +95,7 @@ const Login = () => {
                                     type="button"
                                     onClick={() => navigate('/register')}
                                 >
-                                    Bạn chưa có tài khoản?
+                                    {t('authentication.login.register-link')}
                                 </Button>
                             </div>
                         </CardFooter>

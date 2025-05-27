@@ -9,18 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PartnerController = void 0;
+exports.PartnerPrivateController = void 0;
 const common_1 = require("@nestjs/common");
 const partner_service_1 = require("./partner.service");
-let PartnerController = class PartnerController {
+let PartnerPrivateController = class PartnerPrivateController {
     partnerService;
     constructor(partnerService) {
         this.partnerService = partnerService;
     }
 };
-exports.PartnerController = PartnerController;
-exports.PartnerController = PartnerController = __decorate([
+exports.PartnerPrivateController = PartnerPrivateController;
+exports.PartnerPrivateController = PartnerPrivateController = __decorate([
     (0, common_1.Controller)('partner'),
     __metadata("design:paramtypes", [partner_service_1.PartnerService])
-], PartnerController);
-//# sourceMappingURL=partner.controller.js.map
+], PartnerPrivateController);
+//# sourceMappingURL=partner.private.controller.js.map

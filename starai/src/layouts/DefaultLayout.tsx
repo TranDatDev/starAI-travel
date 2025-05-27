@@ -16,7 +16,9 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 const DefaultLayout = () => {
+    const { t } = useTranslation();
     const { isAuthenticated, userId, logout } = useAuth();
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
@@ -54,7 +56,7 @@ const DefaultLayout = () => {
                                         </Avatar>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56">
-                                        <DropdownMenuLabel>User Menu</DropdownMenuLabel>
+                                        <DropdownMenuLabel></DropdownMenuLabel>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem
                                             onClick={() => {
@@ -63,10 +65,10 @@ const DefaultLayout = () => {
                                                 }
                                             }}
                                         >
-                                            Account
+                                            {t('my-account.title')}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem onClick={logout} className="text-red-500">
-                                            Logout
+                                            {t('my-account.logout')}
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>

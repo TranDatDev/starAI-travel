@@ -15,10 +15,10 @@ export declare class UserPrivateController {
             userId: string;
         } | null;
     } & {
-        id: string;
         name: string | null;
         email: string;
         password: string;
+        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;
@@ -31,20 +31,20 @@ export declare class UserPrivateController {
         updatedAt: Date;
     }>;
     findAll(): import("generated/prisma").Prisma.PrismaPromise<{
-        id: string;
         name: string | null;
         email: string;
+        id: string;
     }[]>;
     findOne(id: string): import("generated/prisma").Prisma.Prisma__UserClient<{
-        id: string;
         name: string | null;
         email: string;
+        id: string;
     } | null, null, import("generated/prisma/runtime/library").DefaultArgs, import("generated/prisma").Prisma.PrismaClientOptions>;
     update(id: string, dto: UpdateUserDto): Promise<{
-        id: string;
         name: string | null;
         email: string;
         password: string;
+        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;
@@ -57,10 +57,10 @@ export declare class UserPrivateController {
         updatedAt: Date;
     }>;
     remove(id: string): import("generated/prisma").Prisma.Prisma__UserClient<{
-        id: string;
         name: string | null;
         email: string;
         password: string;
+        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;

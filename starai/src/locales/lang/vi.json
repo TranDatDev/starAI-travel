@@ -1,7 +1,7 @@
 {
     "language": "Tiếng Việt",
     "change-language-noti": "Ngôn ngữ của bạn đã được chuyển sang Tiếng Việt",
-    "welcome": "Chào mừng bạn đến với Star AI, một dự án du lịch tích hợp AI",
+    "welcome": "Chào mừng bạn đến website du lịch sử dụng kiến trúc Microservices",
     "theme": {
         "light": "Sáng",
         "dark": "Tối",
@@ -10,7 +10,7 @@
     "home": {
         "welcome-title": {
             "small": "Chào mừng đến với",
-            "big": "dự án du lịch tích hợp AI"
+            "big": "website du lịch sử dụng kiến trúc Microservices"
         }
     },
     "link": {
@@ -40,6 +40,11 @@
         "title": "Nhà hàng",
         "no-results": "Không tìm thấy nhà hàng.",
         "has-results": "Đã tìm thấy {{count}} nhà hàng."
+    },
+    "post": {
+        "title": "Bài đăng",
+        "no-results": "Không tìm thấy bài đăng.",
+        "has-results": "Đã tìm thấy {{count}} bài đăng."
     },
     "currency": {
         "type": "VND",
@@ -93,14 +98,91 @@
         "file-type-docx-download-label": "chi tiết"
     },
     "filter": {
+        "find": {
+            "label": "Tìm kiếm"
+        },
+        "search": {
+            "label": "Tìm kiếm từ khóa..."
+        },
         "commune": {
-            "label": "Chọn Phường/Xã"
+            "label": "Phường/Xã"
         },
         "district": {
-            "label": "Chọn Quận/Huyện"
+            "label": "Quận/Huyện"
         },
         "province": {
-            "label": "Chọn Tỉnh/Thành phố"
+            "label": "Tỉnh/Thành phố"
+        },
+        "min-price": {
+            "label": "Giá thấp nhất"
+        },
+        "max-price": {
+            "label": "Giá cao nhất"
+        },
+        "isFeatured": {
+            "label": "Nổi bật"
+        },
+        "isAvailable": {
+            "label": "Còn hoạt động"
         }
+    },
+    "authentication": {
+        "login": {
+            "title": "Đăng nhập",
+            "description": "Nhập thông tin xác thực của bạn ở dưới đây",
+            "email": "Email",
+            "password": "Mật khẩu",
+            "button": "Đăng nhập",
+            "register-link": "Bạn chưa có tài khoản?",
+            "login-success": "Đăng nhập thành công!",
+            "login-failure": "Đăng nhập thất bại."
+        },
+        "register": {
+            "title": "Đăng ký",
+            "description": "Tạo tài khoản mới của bạn",
+            "email": "Email",
+            "password": "Mật khẩu",
+            "confirm-password": "Nhập lại mật khẩu",
+            "button": "Đăng ký",
+            "login-link": "Bạn đã có tài khoản?",
+            "register-success": "Đăng ký thành công!",
+            "register-failure": "Đăng ký thất bại."
+        },
+        "return-home": "Quay lại trang chủ"
+    },
+    "my-account": {
+        "title": "Tài khoản của tôi",
+        "partner": "Đối tác",
+        "request-partner": "Yêu cầu trở thành đối tác",
+        "input-info-request-partner": "Nhập thông tin của bạn để yêu cầu làm đối tác",
+        "organization-name": "Tên tổ chức",
+        "business-license": "Giấy phép kinh doanh",
+        "request-partner-success": "Gửi yêu cầu làm đối tác thành công!",
+        "request-partner-failure": "Gửi yêu cầu làm đối tác thất bại.",
+        "description": "Quản lý thông tin và cài đặt tài khoản của bạn",
+        "edit-info": "Chỉnh sửa thông tin",
+        "edit-avatar": "Chỉnh sửa ảnh đại diện",
+        "picture": "Hình ảnh",
+        "isUploading": "Đang tải lên...",
+        "submit": "Gửi",
+        "disable-account": "Vô hiệu hóa tài khoản",
+        "account-history": "Lịch sử tài khoản",
+        "change-password": "Đổi mật khẩu",
+        "logout": "Đăng xuất",
+        "profile-updated": "Cập nhật hồ sơ thành công!",
+        "password-changed": "Đổi mật khẩu thành công!",
+        "error": {
+            "update-failure": "Cập nhật hồ sơ thất bại.",
+            "change-password-failure": "Đổi mật khẩu thất bại."
+        }
+    },
+    "my-post": {
+        "title": "Bài đăng",
+        "create": "Tạo bài đăng",
+        "submit": "Gửi",
+        "max-size": "Kích thước ảnh tối đa:",
+        "post-title": "Tiêu đề bài đăng",
+        "post-content": "Nội dung bài đăng",
+        "post-image": "Hình ảnh bài đăng"
     }
 }

@@ -14,19 +14,9 @@ export declare class AuthService {
         theme: string | null;
         role: import("generated/prisma").$Enums.Role;
     }>;
-    login(user: any): Promise<{
-        access_token: string;
-        id: any;
-        language: any;
-        theme: any;
-    }>;
+    login(user: any): Promise<any>;
     register(data: {
         email: string;
         password: string;
-    }): Promise<{
-        access_token: string;
-        id: any;
-        language: any;
-        theme: any;
-    }>;
+    }): Promise<any>;
 }

@@ -16,10 +16,10 @@ export declare class UserService {
             userId: string;
         } | null;
     } & {
-        id: string;
         name: string | null;
         email: string;
         password: string;
+        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;
@@ -32,22 +32,16 @@ export declare class UserService {
         updatedAt: Date;
     }>;
     findAll(): import("../../generated/prisma").Prisma.PrismaPromise<{
-        id: string;
         name: string | null;
         email: string;
+        id: string;
     }[]>;
     findOne(id: string): import("../../generated/prisma").Prisma.Prisma__UserClient<{
-        id: string;
         name: string | null;
         email: string;
+        id: string;
     } | null, null, import("generated/prisma/runtime/library").DefaultArgs, import("../../generated/prisma").Prisma.PrismaClientOptions>;
     getUserInfoById(id: string): import("../../generated/prisma").Prisma.Prisma__UserClient<{
-        name: string | null;
-        email: string;
-        phoneNumber: string | null;
-        avatar: string | null;
-        language: string | null;
-        theme: string | null;
         profile: {
             id: string;
             bio: string | null;
@@ -56,12 +50,18 @@ export declare class UserService {
             location: string | null;
             userId: string;
         } | null;
+        name: string | null;
+        email: string;
+        phoneNumber: string | null;
+        avatar: string | null;
+        language: string | null;
+        theme: string | null;
     } | null, null, import("generated/prisma/runtime/library").DefaultArgs, import("../../generated/prisma").Prisma.PrismaClientOptions>;
     update(id: string, dto: UpdateUserDto): Promise<{
-        id: string;
         name: string | null;
         email: string;
         password: string;
+        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;
@@ -74,10 +74,10 @@ export declare class UserService {
         updatedAt: Date;
     }>;
     remove(id: string): import("../../generated/prisma").Prisma.Prisma__UserClient<{
-        id: string;
         name: string | null;
         email: string;
         password: string;
+        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;
@@ -90,9 +90,9 @@ export declare class UserService {
         updatedAt: Date;
     }, never, import("generated/prisma/runtime/library").DefaultArgs, import("../../generated/prisma").Prisma.PrismaClientOptions>;
     findByEmail(email: string): Promise<{
-        id: string;
         email: string;
         password: string;
+        id: string;
         language: string | null;
         theme: string | null;
         role: import("../../generated/prisma").$Enums.Role;
@@ -130,9 +130,9 @@ export declare class UserService {
     }>;
     getAllUserByManager(page: number, limit: number): Promise<{
         data: {
-            id: string;
             name: string | null;
             email: string;
+            id: string;
             role: import("../../generated/prisma").$Enums.Role;
             createdAt: Date;
             updatedAt: Date;

@@ -28,4 +28,14 @@ export class AdminService {
       },
     });
   }
+
+  async getAllStatistics() {
+    const userCount = await this.prisma.user.count();
+    const postCount = await this.prisma.post.count();
+
+    return {
+      userCount,
+      postCount,
+    };
+  }
 }

@@ -1,7 +1,7 @@
 {
     "language": "한국어",
     "change-language-noti": "언어가 한국어로 변경되었습니다",
-    "welcome": "Star AI에 오신 것을 환영합니다. AI가 통합된 여행 프로젝트입니다",
+    "welcome": "마이크로서비스 아키텍처 기반의 여행 웹사이트에 오신 것을 환영합니다",
     "theme": {
         "light": "라이트",
         "dark": "다크",
@@ -10,13 +10,14 @@
     "home": {
         "welcome-title": {
             "small": "환영합니다",
-            "big": "AI 여행 프로젝트에"
+            "big": "마이크로서비스 아키텍처 기반의 여행 웹사이트에"
         }
     },
     "link": {
         "home": "홈",
         "login": "로그인",
         "register": "회원가입",
+        "post": "게시물",
         "accommodation": "숙박 시설",
         "attraction": "관광지",
         "restaurant": "레스토랑"
@@ -30,6 +31,21 @@
         "title": "숙박 시설",
         "no-results": "숙박 시설을 찾을 수 없습니다.",
         "has-results": "{{count}}개의 숙박 시설을 찾았습니다."
+    },
+    "attraction": {
+        "title": "관광지",
+        "no-results": "관광지를 찾을 수 없습니다.",
+        "has-results": "{{count}}개의 관광지를 찾았습니다."
+    },
+    "restaurant": {
+        "title": "레스토랑",
+        "no-results": "레스토랑을 찾을 수 없습니다.",
+        "has-results": "{{count}}개의 레스토랑을 찾았습니다."
+    },
+    "post": {
+        "title": "게시물",
+        "no-results": "게시물을 찾을 수 없습니다.",
+        "has-results": "{{count}}개의 게시물을 찾았습니다."
     },
     "currency": {
         "type": "KRW",
@@ -83,6 +99,12 @@
         "file-type-docx-download-label": "세부 사항"
     },
     "filter": {
+        "find": {
+            "label": "검색"
+        },
+        "search": {
+            "label": "키워드 검색..."
+        },
         "commune": {
             "label": "동/면/읍 선택"
         },
@@ -91,6 +113,77 @@
         },
         "province": {
             "label": "시/도 선택"
+        },
+        "min-price": {
+            "label": "최저 가격"
+        },
+        "max-price": {
+            "label": "최고 가격"
+        },
+        "isFeatured": {
+            "label": "추천"
+        },
+        "isAvailable": {
+            "label": "운영 중"
         }
+    },
+    "authentication": {
+        "login": {
+            "title": "로그인",
+            "description": "아래에 인증 정보를 입력하세요",
+            "email": "이메일",
+            "password": "비밀번호",
+            "button": "로그인",
+            "register-link": "계정이 없으신가요?",
+            "login-success": "로그인 성공!",
+            "login-failure": "로그인 실패."
+        },
+        "register": {
+            "title": "회원가입",
+            "description": "새 계정을 생성하세요",
+            "email": "이메일",
+            "password": "비밀번호",
+            "confirm-password": "비밀번호 확인",
+            "button": "회원가입",
+            "login-link": "이미 계정이 있으신가요?",
+            "register-success": "회원가입 성공!",
+            "register-failure": "회원가입 실패."
+        },
+        "return-home": "홈페이지로 돌아가기"
+    },
+    "my-account": {
+        "title": "내 계정",
+        "partner": "파트너",
+        "request-partner": "파트너 요청",
+        "input-info-request-partner": "파트너 요청을 위해 정보를 입력하세요",
+        "organization-name": "조직 이름",
+        "business-license": "사업자 등록증",
+        "request-partner-success": "파트너 요청이 성공적으로 전송되었습니다!",
+        "request-partner-failure": "파트너 요청 전송에 실패했습니다.",
+        "description": "계정 정보 및 설정 관리",
+        "edit-info": "정보 수정",
+        "edit-avatar": "아바타 수정",
+        "picture": "사진",
+        "isUploading": "업로드 중...",
+        "submit": "제출",
+        "disable-account": "계정 비활성화",
+        "account-history": "계정 이력",
+        "change-password": "비밀번호 변경",
+        "logout": "로그아웃",
+        "profile-updated": "프로필이 성공적으로 업데이트되었습니다!",
+        "password-changed": "비밀번호가 성공적으로 변경되었습니다!",
+        "error": {
+            "update-failure": "프로필 업데이트에 실패했습니다.",
+            "change-password-failure": "비밀번호 변경에 실패했습니다."
+        }
+    },
+    "my-post": {
+        "title": "게시물",
+        "create": "게시물 작성",
+        "submit": "제출",
+        "max-size": "최대 이미지 크기:",
+        "post-title": "게시물 제목",
+        "post-content": "게시물 내용",
+        "post-image": "게시물 이미지"
     }
 }

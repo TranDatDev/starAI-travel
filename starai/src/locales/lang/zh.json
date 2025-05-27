@@ -1,7 +1,7 @@
 {
     "language": "中文",
     "change-language-noti": "您的语言已更改为中文",
-    "welcome": "欢迎来到 Star AI，一个集成 AI 的旅行项目",
+    "welcome": "欢迎来到使用微服务架构的旅游网站",
     "theme": {
         "light": "浅色",
         "dark": "深色",
@@ -10,13 +10,14 @@
     "home": {
         "welcome-title": {
             "small": "欢迎来到",
-            "big": "一个 AI 旅行项目"
+            "big": "使用微服务架构的旅游网站"
         }
     },
     "link": {
         "home": "首页",
         "login": "登录",
         "register": "注册",
+        "post": "文章",
         "accommodation": "住宿",
         "attraction": "景点",
         "restaurant": "餐厅"
@@ -30,6 +31,21 @@
         "title": "住宿",
         "no-results": "未找到住宿。",
         "has-results": "找到 {{count}} 个住宿。"
+    },
+    "attraction": {
+        "title": "景点",
+        "no-results": "未找到景点。",
+        "has-results": "找到 {{count}} 个景点。"
+    },
+    "restaurant": {
+        "title": "餐厅",
+        "no-results": "未找到餐厅。",
+        "has-results": "找到 {{count}} 家餐厅。"
+    },
+    "post": {
+        "title": "文章",
+        "no-results": "未找到文章。",
+        "has-results": "找到 {{count}} 篇文章。"
     },
     "currency": {
         "type": "CNY",
@@ -74,7 +90,7 @@
         },
         "user-rating": {
             "label": "用户评分",
-            "description": "用户对住宿的评分"
+            "description": "用户评分"
         },
         "download": {
             "label": "下载信息",
@@ -83,6 +99,12 @@
         "file-type-docx-download-label": "详细信息"
     },
     "filter": {
+        "find": {
+            "label": "查找"
+        },
+        "search": {
+            "label": "搜索关键词..."
+        },
         "commune": {
             "label": "选择乡/镇/街道"
         },
@@ -91,6 +113,77 @@
         },
         "province": {
             "label": "选择省/直辖市"
+        },
+        "min-price": {
+            "label": "最低价格"
+        },
+        "max-price": {
+            "label": "最高价格"
+        },
+        "isFeatured": {
+            "label": "精选"
+        },
+        "isAvailable": {
+            "label": "可用"
         }
+    },
+    "authentication": {
+        "login": {
+            "title": "登录",
+            "description": "请在下方输入您的认证信息",
+            "email": "电子邮箱",
+            "password": "密码",
+            "button": "登录",
+            "register-link": "还没有账号？",
+            "login-success": "登录成功！",
+            "login-failure": "登录失败。"
+        },
+        "register": {
+            "title": "注册",
+            "description": "创建您的新账户",
+            "email": "电子邮箱",
+            "password": "密码",
+            "confirm-password": "确认密码",
+            "button": "注册",
+            "login-link": "已经有账号了？",
+            "register-success": "注册成功！",
+            "register-failure": "注册失败。"
+        },
+        "return-home": "返回主页"
+    },
+    "my-account": {
+        "title": "我的账户",
+        "partner": "合作伙伴",
+        "request-partner": "申请合作伙伴",
+        "input-info-request-partner": "请输入您的信息以申请合作关系",
+        "organization-name": "组织名称",
+        "business-license": "营业执照",
+        "request-partner-success": "合作伙伴申请已成功发送！",
+        "request-partner-failure": "发送合作伙伴申请失败。",
+        "description": "管理您的账户信息和设置",
+        "edit-info": "编辑信息",
+        "edit-avatar": "编辑头像",
+        "picture": "图片",
+        "isUploading": "上传中...",
+        "submit": "提交",
+        "disable-account": "禁用账户",
+        "account-history": "账户历史",
+        "change-password": "修改密码",
+        "logout": "登出",
+        "profile-updated": "个人资料更新成功！",
+        "password-changed": "密码修改成功！",
+        "error": {
+            "update-failure": "更新个人资料失败。",
+            "change-password-failure": "修改密码失败。"
+        }
+    },
+    "my-post": {
+        "title": "帖子",
+        "create": "创建帖子",
+        "submit": "提交",
+        "max-size": "最大图片大小：",
+        "post-title": "帖子标题",
+        "post-content": "帖子内容",
+        "post-image": "帖子图片"
     }
 }

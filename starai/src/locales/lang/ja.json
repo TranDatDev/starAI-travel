@@ -1,7 +1,7 @@
 {
     "language": "日本語",
     "change-language-noti": "言語が日本語に変更されました",
-    "welcome": "Star AIへようこそ。AIを統合した旅行プロジェクトです",
+    "welcome": "マイクロサービスアーキテクチャに基づく旅行ウェブサイトへようこそ",
     "theme": {
         "light": "ライト",
         "dark": "ダーク",
@@ -10,13 +10,14 @@
     "home": {
         "welcome-title": {
             "small": "ようこそ",
-            "big": "AI旅行プロジェクトへ"
+            "big": "マイクロサービスアーキテクチャに基づく旅行ウェブサイトへ"
         }
     },
     "link": {
         "home": "ホーム",
         "login": "ログイン",
         "register": "登録",
+        "post": "投稿",
         "accommodation": "宿泊施設",
         "attraction": "観光名所",
         "restaurant": "レストラン"
@@ -30,6 +31,21 @@
         "title": "宿泊施設",
         "no-results": "宿泊施設が見つかりませんでした。",
         "has-results": "{{count}} 件の宿泊施設が見つかりました。"
+    },
+    "attraction": {
+        "title": "観光名所",
+        "no-results": "観光名所が見つかりませんでした。",
+        "has-results": "{{count}} 件の観光名所が見つかりました。"
+    },
+    "restaurant": {
+        "title": "レストラン",
+        "no-results": "レストランが見つかりませんでした。",
+        "has-results": "{{count}} 件のレストランが見つかりました。"
+    },
+    "post": {
+        "title": "投稿",
+        "no-results": "投稿が見つかりませんでした。",
+        "has-results": "{{count}} 件の投稿が見つかりました。"
     },
     "currency": {
         "type": "JPY",
@@ -83,6 +99,12 @@
         "file-type-docx-download-label": "詳細"
     },
     "filter": {
+        "find": {
+            "label": "検索"
+        },
+        "search": {
+            "label": "キーワード検索..."
+        },
         "commune": {
             "label": "区/町村を選択"
         },
@@ -91,6 +113,77 @@
         },
         "province": {
             "label": "都道府県を選択"
+        },
+        "min-price": {
+            "label": "最低価格"
+        },
+        "max-price": {
+            "label": "最高価格"
+        },
+        "isFeatured": {
+            "label": "おすすめ"
+        },
+        "isAvailable": {
+            "label": "利用可能"
         }
+    },
+    "authentication": {
+        "login": {
+            "title": "ログイン",
+            "description": "以下に認証情報を入力してください",
+            "email": "メールアドレス",
+            "password": "パスワード",
+            "button": "ログイン",
+            "register-link": "アカウントをお持ちでない方はこちら",
+            "login-success": "ログインに成功しました！",
+            "login-failure": "ログインに失敗しました。"
+        },
+        "register": {
+            "title": "新規登録",
+            "description": "新しいアカウントを作成します",
+            "email": "メールアドレス",
+            "password": "パスワード",
+            "confirm-password": "パスワード（確認）",
+            "button": "登録",
+            "login-link": "すでにアカウントをお持ちですか？",
+            "register-success": "登録に成功しました！",
+            "register-failure": "登録に失敗しました。"
+        },
+        "return-home": "ホームページに戻る"
+    },
+    "my-account": {
+        "title": "マイアカウント",
+        "partner": "パートナー",
+        "request-partner": "パートナー申請",
+        "input-info-request-partner": "パートナー申請のための情報を入力してください",
+        "organization-name": "組織名",
+        "business-license": "事業ライセンス",
+        "request-partner-success": "パートナー申請が正常に送信されました！",
+        "request-partner-failure": "パートナー申請の送信に失敗しました。",
+        "description": "アカウント情報と設定を管理する",
+        "edit-info": "情報を編集",
+        "edit-avatar": "アバターを編集",
+        "picture": "写真",
+        "isUploading": "アップロード中...",
+        "submit": "送信",
+        "disable-account": "アカウントを無効にする",
+        "account-history": "アカウント履歴",
+        "change-password": "パスワードを変更する",
+        "logout": "ログアウト",
+        "profile-updated": "プロフィールが正常に更新されました！",
+        "password-changed": "パスワードが正常に変更されました！",
+        "error": {
+            "update-failure": "プロフィールの更新に失敗しました。",
+            "change-password-failure": "パスワードの変更に失敗しました。"
+        }
+    },
+    "my-post": {
+        "title": "投稿",
+        "create": "投稿を作成",
+        "submit": "送信",
+        "max-size": "最大画像サイズ：",
+        "post-title": "投稿のタイトル",
+        "post-content": "投稿の内容",
+        "post-image": "投稿の画像"
     }
 }

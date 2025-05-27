@@ -7,19 +7,9 @@ export declare class AuthController {
         password: string;
         superkey?: string;
         adminkey?: string;
-    }): Promise<{
-        access_token: string;
-        id: any;
-        language: any;
-        theme: any;
-    }>;
+    }): Promise<any>;
     register(body: {
         email: string;
         password: string;
-    }): Promise<{
-        access_token: string;
-        id: any;
-        language: any;
-        theme: any;
-    }>;
+    }): Promise<any>;
 }

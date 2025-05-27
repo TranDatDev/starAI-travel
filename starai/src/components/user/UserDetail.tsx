@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getUserDetailById, changeUserAvatarById } from '@/services/user/userService';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+    getUserDetailById,
+    changeUserAvatarById,
+    uploadRequestPartner,
+} from '@/services/user/userService';
+import { Card, CardContent, CardDescription } from '@/components/ui/card';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,13 +19,15 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
+import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 const UserDetail = () => {
+    const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const [userDetail, setUserDetail] = useState<any>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
-
+    const { role } = useAuth();
     useEffect(() => {
         if (id) {
             getUserDetailById(id)
@@ -42,6 +41,7 @@ const UserDetail = () => {
             setSelectedFile(e.target.files[0]);
         }
     };
+    console.log('userDetail', userDetail);
 
     const handleSubmit = async () => {
         if (!id || !selectedFile) return;
@@ -63,6 +63,31 @@ const UserDetail = () => {
         }
     };
 
+    const [organization, setOrganization] = useState('');
+    const [licenseNumber, setLicenseNumber] = useState('');
+    const handleRequestPartner = async () => {
+        if (!id || !organization || !licenseNumber) {
+            alert('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+
+        setIsUploading(true);
+        try {
+            await uploadRequestPartner(id, {
+                organization,
+                licenseNumber,
+            });
+            alert(t('my-account.request-partner-success'));
+            const updatedUser = await getUserDetailById(id);
+            setUserDetail(updatedUser);
+        } catch (error) {
+            console.error(t('my-account.request-partner-failure'), error);
+            alert(t('my-account.request-partner-failure'));
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     return (
         <div>
             {userDetail ? (
@@ -77,24 +102,19 @@ const UserDetail = () => {
                         </AspectRatio>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="outline">Đổi ảnh đại diện</Button>
+                                <Button variant="outline">{t('my-account.edit-avatar')}</Button>
                             </DialogTrigger>
-                            <Button variant="outline">Vô hiệu hóa tài khoản</Button>
-                            <Button variant="outline">Lịch sử tài khoản</Button>
-                            <Button variant="outline">Yêu cầu đối tác</Button>
-                            <Button variant="outline">Cập nhật thông tin</Button>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
-                                    <DialogTitle>Đổi ảnh đại diện</DialogTitle>
+                                    <DialogTitle>{t('my-account.edit-avatar')}</DialogTitle>
                                     <DialogDescription>
-                                        <span>Chọn ảnh đại diện bạn muốn đổi ở dưới đây</span>
                                         <br />
-                                        <span>Lưu ý: dung lượng tối đa 5MB</span>
+                                        <span>5MB</span>
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
                                     <div className="grid w-full max-w-sm items-center gap-1.5">
-                                        <Label htmlFor="picture">Picture</Label>
+                                        <Label htmlFor="picture">{t('my-account.picture')}</Label>
                                         <Input
                                             id="picture"
                                             type="file"
@@ -105,22 +125,80 @@ const UserDetail = () => {
                                 </div>
                                 <DialogFooter>
                                     <Button onClick={handleSubmit} disabled={isUploading}>
-                                        {isUploading ? 'Đang tải lên...' : 'Xác nhận'}
+                                        {isUploading
+                                            ? t('my-account.isUploading')
+                                            : t('my-account.submit')}
                                     </Button>
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
+                        {role !== 'PARTNER' && (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline">
+                                        {t('my-account.request-partner')}
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                        <DialogTitle>{t('my-account.request-partner')}</DialogTitle>
+                                        <DialogDescription>
+                                            <span>
+                                                {t('my-account.input-info-request-partner')}
+                                            </span>
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                            <Label htmlFor="organization">
+                                                {t('my-account.organization-name')}
+                                            </Label>
+                                            <Input
+                                                id="organization"
+                                                type="text"
+                                                onChange={(e) => setOrganization(e.target.value)}
+                                                disabled={isUploading}
+                                            />
+                                        </div>
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                                            <Label htmlFor="licenseNumber">
+                                                {t('my-account.business-license')}
+                                            </Label>
+                                            <Input
+                                                id="licenseNumber"
+                                                type="text"
+                                                onChange={(e) => setLicenseNumber(e.target.value)}
+                                                disabled={isUploading}
+                                            />
+                                        </div>
+                                    </div>
+                                    <DialogFooter>
+                                        <Button
+                                            onClick={handleRequestPartner}
+                                            disabled={isUploading}
+                                        >
+                                            {isUploading
+                                                ? t('my-account.isUploading')
+                                                : t('my-account.submit')}
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        )}
+                        <Button variant="outline">{t('my-account.disable-account')}</Button>
+                        <Button variant="outline">{t('my-account.edit-info')}</Button>
                     </Card>
 
                     <Card className="w-[75vw]">
-                        <CardHeader>
-                            <CardTitle>{userDetail.name}</CardTitle>
-                            <CardDescription>{userDetail.email}</CardDescription>
-                        </CardHeader>
+                        {role === 'PARTNER' && (
+                            <div className="mb-4 flex justify-end">
+                                <h1 className="bg-amber-500 rounded mr-4 px-4 py-2">
+                                    {t('my-account.partner')}
+                                </h1>
+                            </div>
+                        )}
                         <CardContent>
-                            <div>Tên: Trần Thành Đạt</div>
-                            <div>Ngày sinh: 2000-01-01</div>
-                            <div>Giới tính: Nam</div>
+                            <CardDescription>Email: {userDetail.email}</CardDescription>
                         </CardContent>
                     </Card>
                 </div>

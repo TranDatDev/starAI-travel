@@ -31,6 +31,14 @@ let AdminService = class AdminService {
             },
         });
     }
+    async getAllStatistics() {
+        const userCount = await this.prisma.user.count();
+        const postCount = await this.prisma.post.count();
+        return {
+            userCount,
+            postCount,
+        };
+    }
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([

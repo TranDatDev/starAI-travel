@@ -15,7 +15,9 @@ import { toast } from 'sonner';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import AnimatedBox from '@/components/AnimatedBox';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from 'react-i18next';
 const Register = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -32,10 +34,10 @@ const Register = () => {
         try {
             await register(email, password); // Gọi API register
             console.log(register);
-            toast.success('Đăng ký thành công!');
+            toast.success(t('authentication.register.register-success'));
             navigate('/login'); // Điều hướng về trang đăng nhập
         } catch (err) {
-            toast.error('Đăng ký thất bại. Vui lòng thử lại.');
+            toast.error(t('authentication.register.register-failure'));
         }
     };
 
@@ -48,20 +50,24 @@ const Register = () => {
                             <div className="flex items-center justify-between">
                                 <h1 className="font-bold text-3xl py-4">STRARAI</h1>
                                 <Button variant="link" type="button" onClick={() => navigate('/')}>
-                                    Quay lại trang chủ
+                                    {t('authentication.return-home')}
                                     <Icon
                                         icon="material-symbols:arrow-back-ios-new"
                                         className="ml-2"
                                     />
                                 </Button>
                             </div>
-                            <CardTitle>Đăng ký</CardTitle>
-                            <CardDescription>Tạo tài khoản mới của bạn</CardDescription>
+                            <CardTitle>{t('authentication.register.title')}</CardTitle>
+                            <CardDescription>
+                                {t('authentication.register.description')}
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <section className="flex flex-col gap-8">
                                 <div>
-                                    <Label className="mb-2">Email</Label>
+                                    <Label className="mb-2">
+                                        {t('authentication.register.email')}
+                                    </Label>
                                     <Input
                                         type="email"
                                         value={email}
@@ -69,7 +75,9 @@ const Register = () => {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2">Password</Label>
+                                    <Label className="mb-2">
+                                        {t('authentication.register.password')}
+                                    </Label>
                                     <Input
                                         type="password"
                                         value={password}
@@ -77,7 +85,9 @@ const Register = () => {
                                     />
                                 </div>
                                 <div>
-                                    <Label className="mb-2">Nhập lại mật khẩu</Label>
+                                    <Label className="mb-2">
+                                        {t('authentication.register.confirm-password')}
+                                    </Label>
                                     <Input
                                         type="password"
                                         value={confirmPassword}
@@ -86,7 +96,7 @@ const Register = () => {
                                 </div>
                                 <div className="flex items-center justify-end">
                                     <Button type="submit" className="my-4">
-                                        Đăng ký
+                                        {t('authentication.register.button')}
                                     </Button>
                                 </div>
                             </section>
@@ -98,7 +108,7 @@ const Register = () => {
                                     type="button"
                                     onClick={() => navigate('/login')}
                                 >
-                                    Đã có tài khoản?
+                                    {t('authentication.register.login-link')}
                                 </Button>
                             </div>
                         </CardFooter>

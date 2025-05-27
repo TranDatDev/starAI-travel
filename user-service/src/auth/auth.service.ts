@@ -73,12 +73,16 @@ export class AuthService {
       language: user.language,
       theme: user.theme,
     };
-    return {
+    const response: any = {
       access_token: this.jwtService.sign(payload),
       id: user.id,
       language: user.language,
       theme: user.theme,
     };
+    if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
+      response.role = user.role;
+    }
+    return response;
   }
 
   async register(data: { email: string; password: string }) {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PartnerController } from './partner.controller';
+import { PartnerController } from './partner.public.controller';
 import { PartnerService } from './partner.service';
 
 describe('PartnerController', () => {

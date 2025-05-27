@@ -10,11 +10,12 @@ export declare class AdminService {
         targetType?: TargetType;
         description?: string;
     }): Promise<{
-        description: string | null;
         id: string;
+        adminId: string;
         action: import("../../generated/prisma").$Enums.AdminAction;
         targetId: string | null;
         targetType: import("../../generated/prisma").$Enums.TargetType | null;
+        description: string | null;
         httpMethod: import("../../generated/prisma").$Enums.HttpMethod | null;
         httpUrl: string | null;
         httpQuery: import("generated/prisma/runtime/library").JsonValue | null;
@@ -22,6 +23,9 @@ export declare class AdminService {
         httpBody: import("generated/prisma/runtime/library").JsonValue | null;
         httpHeaders: import("generated/prisma/runtime/library").JsonValue | null;
         actedAt: Date;
-        adminId: string;
+    }>;
+    getAllStatistics(): Promise<{
+        userCount: number;
+        postCount: number;
     }>;
 }

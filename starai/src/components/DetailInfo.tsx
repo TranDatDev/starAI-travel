@@ -51,15 +51,23 @@ const DetailInfo = ({ service }: Props) => {
                         ...(data.maxRooms
                             ? [
                                   new Paragraph(
-                                      `${t('details.info.max-guests.label')}: ${data.maxRooms}`
+                                      `${t('details.info.max-rooms.label')}: ${data.maxRooms}`
                                   ),
                               ]
                             : []),
                         ...(data.contactEmail
-                            ? [new Paragraph(`${t('details.info.email')}: ${data.contactEmail}`)]
+                            ? [
+                                  new Paragraph(
+                                      `${t('details.info.email.label')}: ${data.contactEmail}`
+                                  ),
+                              ]
                             : []),
                         ...(data.contactPhone
-                            ? [new Paragraph(`${t('details.info.phone')}: ${data.contactPhone}`)]
+                            ? [
+                                  new Paragraph(
+                                      `${t('details.info.phone.label')}: ${data.contactPhone}`
+                                  ),
+                              ]
                             : []),
                     ],
                 },

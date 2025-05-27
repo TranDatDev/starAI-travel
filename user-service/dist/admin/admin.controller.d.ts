@@ -8,17 +8,17 @@ export declare class AdminController {
     getAllManagers(): Promise<({
         profile: {
             id: string;
+            userId: string;
             bio: string | null;
             birthday: Date | null;
             gender: string | null;
             location: string | null;
-            userId: string;
         } | null;
     } & {
+        id: string;
         name: string | null;
         email: string;
         password: string;
-        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;
@@ -33,17 +33,17 @@ export declare class AdminController {
     getManagerById(id: string): Promise<({
         profile: {
             id: string;
+            userId: string;
             bio: string | null;
             birthday: Date | null;
             gender: string | null;
             location: string | null;
-            userId: string;
         } | null;
     } & {
+        id: string;
         name: string | null;
         email: string;
         password: string;
-        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;
@@ -58,17 +58,17 @@ export declare class AdminController {
     createManager(dto: CreateManagerDto, req: any): Promise<{
         profile: {
             id: string;
+            userId: string;
             bio: string | null;
             birthday: Date | null;
             gender: string | null;
             location: string | null;
-            userId: string;
         } | null;
     } & {
+        id: string;
         name: string | null;
         email: string;
         password: string;
-        id: string;
         phoneNumber: string | null;
         avatar: string | null;
         language: string | null;

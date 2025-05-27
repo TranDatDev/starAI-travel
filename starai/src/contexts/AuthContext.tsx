@@ -1,14 +1,21 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { updateUserLanguage, updateUserTheme } from '@/services/user/userService';
-import i18n from '@/locales/i18n'; // Đảm bảo import đúng instance i18n
+import i18n from '@/locales/i18n';
 
 interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     userId: string | null;
+    role: string | null;
     language: string | null;
     theme: string | null;
-    login: (token: string, userId: string, language: string, theme: string) => Promise<void>;
+    login: (
+        token: string,
+        userId: string,
+        role: string,
+        language: string,
+        theme: string
+    ) => Promise<void>;
     logout: () => void;
     updateTheme: (theme: string) => void;
     updateLanguage: (language: string) => void;
@@ -20,18 +27,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [userId, setUserId] = useState<string | null>(null);
+    const [role, setRole] = useState<string | null>(null);
     const [language, setLanguage] = useState<string | null>(null);
     const [theme, setTheme] = useState<string | null>(null);
-    const [isI18nReady, setIsI18nReady] = useState(false); // ✅ trạng thái đồng bộ i18n
+    const [isI18nReady, setIsI18nReady] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
         const storedUserId = localStorage.getItem('userId');
+        const storedRole = localStorage.getItem('role');
         const storedLanguage = localStorage.getItem('language');
         const storedTheme = localStorage.getItem('theme');
 
         setIsAuthenticated(!!token);
         setUserId(storedUserId);
+        setRole(storedRole);
         setLanguage(storedLanguage);
         setTheme(storedTheme);
 
@@ -50,18 +60,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return null;
     }
 
-    const login = async (token: string, userId: string, language: string, theme: string) => {
+    const login = async (
+        token: string,
+        userId: string,
+        role: string,
+        language: string,
+        theme: string
+    ) => {
         localStorage.setItem('accessToken', token);
         localStorage.setItem('userId', userId);
+        localStorage.setItem('role', role);
         localStorage.setItem('language', language);
         localStorage.setItem('theme', theme);
 
         setIsAuthenticated(true);
         setUserId(userId);
+        setRole(role);
         setLanguage(language);
         setTheme(theme);
 
-        // ✅ Đồng bộ lại với i18n sau khi login
         if (language && language !== i18n.language) {
             await i18n.changeLanguage(language);
         }
@@ -70,11 +87,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const logout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userId');
+        localStorage.removeItem('role');
         localStorage.removeItem('language');
         localStorage.removeItem('theme');
 
         setIsAuthenticated(false);
         setUserId(null);
+        setRole(null);
         setLanguage(null);
         setTheme(null);
     };
@@ -110,6 +129,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 isAuthenticated,
                 isLoading,
                 userId,
+                role,
                 language,
                 theme,
                 login,

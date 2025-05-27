@@ -1,7 +1,7 @@
 {
     "language": "English",
     "change-language-noti": "Your language has been changed to English",
-    "welcome": "Welcome to Star AI, a travel project integrated with AI",
+    "welcome": "Welcome to a travel website based on microservices architecture",
     "theme": {
         "light": "Light",
         "dark": "Dark",
@@ -10,13 +10,14 @@
     "home": {
         "welcome-title": {
             "small": "Welcome to",
-            "big": "a Travel-AI project"
+            "big": "a travel website built with microservices architecture"
         }
     },
     "link": {
         "home": "Home",
         "login": "Login",
         "register": "Register",
+        "post": "Posts",
         "accommodation": "Accommodations",
         "attraction": "Attractions",
         "restaurant": "Restaurants"
@@ -30,6 +31,21 @@
         "title": "Accommodations",
         "no-results": "No accommodations found.",
         "has-results": "Found {{count}} accommodations."
+    },
+    "attraction": {
+        "title": "Attractions",
+        "no-results": "No attractions found.",
+        "has-results": "Found {{count}} attractions."
+    },
+    "restaurant": {
+        "title": "Restaurants",
+        "no-results": "No restaurants found.",
+        "has-results": "Found {{count}} restaurants."
+    },
+    "post": {
+        "title": "Posts",
+        "no-results": "No posts found.",
+        "has-results": "Found {{count}} posts."
     },
     "currency": {
         "type": "USD",
@@ -83,6 +99,12 @@
         "file-type-docx-download-label": "details"
     },
     "filter": {
+        "find": {
+            "label": "Search"
+        },
+        "search": {
+            "label": "Search by keyword..."
+        },
         "commune": {
             "label": "Select Commune"
         },
@@ -91,6 +113,77 @@
         },
         "province": {
             "label": "Select Province"
+        },
+        "min-price": {
+            "label": "Minimum Price"
+        },
+        "max-price": {
+            "label": "Maximum Price"
+        },
+        "isFeatured": {
+            "label": "Featured"
+        },
+        "isAvailable": {
+            "label": "Available"
         }
+    },
+    "authentication": {
+        "login": {
+            "title": "Login",
+            "description": "Enter your credentials below",
+            "email": "Email",
+            "password": "Password",
+            "button": "Login",
+            "register-link": "Don't have an account?",
+            "login-success": "Login successful!",
+            "login-failure": "Login failed."
+        },
+        "register": {
+            "title": "Register",
+            "description": "Create your new account",
+            "email": "Email",
+            "password": "Password",
+            "confirm-password": "Confirm Password",
+            "button": "Register",
+            "login-link": "Already have an account?",
+            "register-success": "Registration successful!",
+            "register-failure": "Registration failed."
+        },
+        "return-home": "Return to homepage"
+    },
+    "my-account": {
+        "title": "My Account",
+        "partner": "Partner",
+        "request-partner": "Request Partner",
+        "input-info-request-partner": "Enter your information to request partnership",
+        "organization-name": "Organization Name",
+        "business-license": "Business License",
+        "request-partner-success": "Partner request sent successfully!",
+        "request-partner-failure": "Failed to send partner request.",
+        "description": "Manage your account information and settings",
+        "edit-info": "Edit Information",
+        "edit-avatar": "Edit Avatar",
+        "picture": "Picture",
+        "isUploading": "Uploading...",
+        "submit": "Submit",
+        "disable-account": "Disable Account",
+        "account-history": "Account History",
+        "change-password": "Change Password",
+        "logout": "Logout",
+        "profile-updated": "Profile updated successfully!",
+        "password-changed": "Password changed successfully!",
+        "error": {
+            "update-failure": "Failed to update profile.",
+            "change-password-failure": "Failed to change password."
+        }
+    },
+    "my-post": {
+        "title": "Posts",
+        "create": "Create Post",
+        "submit": "Submit",
+        "max-size": "Max image size:",
+        "post-title": "Post Title",
+        "post-content": "Post Content",
+        "post-image": "Post Image"
     }
 }
